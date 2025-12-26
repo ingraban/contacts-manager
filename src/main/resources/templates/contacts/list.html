@@ -122,11 +122,16 @@
 	                        <span th:text="${contact.vorname}"></span>
 	                        <span th:text="${contact.nachname}"></span>
 						</div>
+                        <div th:if="${contact.firma}" class="contact-firma" th:text="${contact.firma}"></div>
                         <div class="hashtag-list" th:if="${!contact.hashtags.empty}">
                             <span th:each="hashtag : ${contact.hashtags}"
                                   th:if="${!hashtag.gesperrt}"
                                   class="hashtag-badge"
                                   th:text="${hashtag.name}"></span>
+                        </div>
+                        <div th:if="${contact.bemerkung}" class="contact-bemerkung" th:title="${contact.bemerkung}">
+                            <i class="bi bi-info-circle"></i>
+                            <span th:text="${#strings.abbreviate(contact.bemerkung, 50)}"></span>
                         </div>
                     </td>
                     <td>

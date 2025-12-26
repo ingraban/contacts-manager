@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/changes/005-create-contact-hashtag-table.yaml
   - include:
       file: db/changelog/changes/006-add-test-hashtags.yaml
+  - include:
+      file: db/changelog/changes/007-add-firma-bemerkung-columns.yaml

@@ -227,4 +227,65 @@ class ContactServiceTest {
 
         verify(contactRepository, never()).deleteById(anyLong());
     }
+
+    @Test
+    void shouldUpdateContactWithFirmaAndBemerkung() {
+        // Given
+        Contact existingContact = new Contact();
+        existingContact.setId(1L);
+        existingContact.setVorname("Max");
+        existingContact.setNachname("Mustermann");
+        existingContact.setStrasse("Hauptstraße 1");
+        existingContact.setPostleitzahl("12345");
+        existingContact.setOrt("Berlin");
+        existingContact.setFirma(null);
+        existingContact.setBemerkung(null);
+
+        Contact updatedContact = new Contact();
+        updatedContact.setVorname("Max");
+        updatedContact.setNachname("Mustermann");
+        updatedContact.setStrasse("Hauptstraße 1");
+        updatedContact.setPostleitzahl("12345");
+        updatedContact.setOrt("Berlin");
+        updatedContact.setFirma("Neue Firma GmbH");
+        updatedContact.setBemerkung("Wichtiger Kunde");
+
+        when(contactRepository.findById(1L)).thenReturn(Optional.of(existingContact));
+        when(contactRepository.findByNameAndAddress(anyString(), anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(Optional.of(existingContact));
+        when(contactRepository.save(any(Contact.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // When
+        Contact result = contactService.updateContact(1L, updatedContact);
+
+        // Then
+        assertThat(result.getFirma()).isEqualTo("Neue Firma GmbH");
+        assertThat(result.getBemerkung()).isEqualTo("Wichtiger Kunde");
+        verify(contactRepository).save(existingContact);
+    }
+
+    @Test
+    void shouldNormalizeEmptyFirmaAndBemerkungToNull() {
+        // Given
+        Contact contact = new Contact();
+        contact.setVorname("Test");
+        contact.setNachname("User");
+        contact.setStrasse("Teststraße 1");
+        contact.setPostleitzahl("12345");
+        contact.setOrt("Teststadt");
+        contact.setFirma("   "); // Empty string with spaces
+        contact.setBemerkung(""); // Empty string
+
+        when(contactRepository.findByNameAndAddress(anyString(), anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(Optional.empty());
+        when(contactRepository.save(any(Contact.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // When
+        Contact result = contactService.createContact(contact);
+
+        // Then
+        assertThat(result.getFirma()).isNull();
+        assertThat(result.getBemerkung()).isNull();
+        verify(contactRepository).save(contact);
+    }
 }

@@ -140,4 +140,106 @@ class ContactRepositoryTest {
         assertThat(results).hasSize(1);
         assertThat(results.get(0).getNachname()).isEqualTo("Mustermann");
     }
+
+    @Test
+    void shouldSaveAndRetrieveContactWithFirma() {
+        // Given
+        Contact contact = new Contact();
+        contact.setVorname("Anna");
+        contact.setNachname("Schmidt");
+        contact.setStrasse("Teststraße 5");
+        contact.setPostleitzahl("54321");
+        contact.setOrt("München");
+        contact.setFirma("Test GmbH");
+
+        // When
+        Contact saved = contactRepository.save(contact);
+        Contact retrieved = contactRepository.findById(saved.getId()).orElseThrow();
+
+        // Then
+        assertThat(retrieved.getFirma()).isEqualTo("Test GmbH");
+    }
+
+    @Test
+    void shouldSaveAndRetrieveContactWithBemerkung() {
+        // Given
+        Contact contact = new Contact();
+        contact.setVorname("Peter");
+        contact.setNachname("Weber");
+        contact.setStrasse("Teststraße 10");
+        contact.setPostleitzahl("98765");
+        contact.setOrt("Hamburg");
+        contact.setBemerkung("Dies ist eine wichtige Testbemerkung für den Kontakt");
+
+        // When
+        Contact saved = contactRepository.save(contact);
+        Contact retrieved = contactRepository.findById(saved.getId()).orElseThrow();
+
+        // Then
+        assertThat(retrieved.getBemerkung()).isEqualTo("Dies ist eine wichtige Testbemerkung für den Kontakt");
+    }
+
+    @Test
+    void shouldSearchContactsByFirma() {
+        // Given
+        Contact contact = new Contact();
+        contact.setVorname("Maria");
+        contact.setNachname("Müller");
+        contact.setStrasse("Firmenstraße 1");
+        contact.setPostleitzahl("11111");
+        contact.setOrt("Frankfurt");
+        contact.setFirma("Beispiel AG");
+        contactRepository.save(contact);
+
+        // When
+        List<Contact> results = contactRepository.searchContacts("Beispiel AG");
+
+        // Then
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getFirma()).isEqualTo("Beispiel AG");
+    }
+
+    @Test
+    void shouldSearchContactsByBemerkung() {
+        // Given
+        Contact contact = new Contact();
+        contact.setVorname("Thomas");
+        contact.setNachname("Klein");
+        contact.setStrasse("Bemerkungsweg 2");
+        contact.setPostleitzahl("22222");
+        contact.setOrt("Köln");
+        contact.setBemerkung("Wichtiger VIP-Kunde");
+        contactRepository.save(contact);
+
+        // When
+        List<Contact> results = contactRepository.searchContacts("VIP-Kunde");
+
+        // Then
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getBemerkung()).contains("VIP-Kunde");
+    }
+
+    @Test
+    void shouldUpdateContactWithFirma() {
+        // Given - Create contact without firma
+        Contact contact = new Contact();
+        contact.setVorname("Julia");
+        contact.setNachname("Fischer");
+        contact.setStrasse("Updatestraße 1");
+        contact.setPostleitzahl("33333");
+        contact.setOrt("Stuttgart");
+        Contact saved = contactRepository.save(contact);
+
+        assertThat(saved.getFirma()).isNull();
+
+        // When - Update contact with firma
+        saved.setFirma("Neue Firma GmbH");
+        Contact updated = contactRepository.save(saved);
+
+        // Then - Verify firma was updated
+        Contact retrieved = contactRepository.findById(updated.getId()).orElseThrow();
+        assertThat(retrieved.getFirma()).isEqualTo("Neue Firma GmbH");
+        assertThat(retrieved.getVorname()).isEqualTo("Julia");
+        assertThat(retrieved.getNachname()).isEqualTo("Fischer");
+    }
 }

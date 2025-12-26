@@ -161,6 +161,33 @@
                       class="error"></span>
             </div>
 
+            <!-- Firma -->
+            <div class="form-group">
+                <label for="firma">Firma</label>
+                <input type="text"
+                       id="firma"
+                       th:field="*{firma}"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('firma')} ? 'error-input' : ''"
+                       maxlength="200">
+                <span th:if="${#fields.hasErrors('firma')}"
+                      th:errors="*{firma}"
+                      class="error"></span>
+            </div>
+
+            <!-- Bemerkung -->
+            <div class="form-group">
+                <label for="bemerkung">Bemerkung</label>
+                <textarea id="bemerkung"
+                          th:field="*{bemerkung}"
+                          class="form-control"
+                          th:classappend="${#fields.hasErrors('bemerkung')} ? 'error-input' : ''"
+                          rows="4"></textarea>
+                <span th:if="${#fields.hasErrors('bemerkung')}"
+                      th:errors="*{bemerkung}"
+                      class="error"></span>
+            </div>
+
             <!-- Hashtags -->
             <div class="form-group" th:if="${availableHashtags != null && !availableHashtags.empty}">
                 <label>Hashtags</label>

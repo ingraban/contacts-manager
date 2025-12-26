@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-add-firma-bemerkung-columns
+      author: saak
+      changes:
+        - addColumn:
+            tableName: contact
+            columns:
+              - column:
+                  name: firma
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: bemerkung
+                  type: text
+                  constraints:
+                    nullable: true

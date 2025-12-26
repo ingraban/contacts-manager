@@ -595,3 +595,24 @@ button.submit-btn:hover {
 .btn-success:hover {
     background-color: #218838;
 }
+
+/* Contact List - Firma and Bemerkung */
+.contact-firma {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+.contact-bemerkung {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.contact-bemerkung i {
+    font-size: 0.9rem;
+}

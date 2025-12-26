@@ -63,6 +63,13 @@ public class Contact {
     @Column(name = "email", length = 255)
     private String email;
 
+    @Size(max = 200, message = "Firma darf maximal 200 Zeichen lang sein")
+    @Column(name = "firma", length = 200)
+    private String firma;
+
+    @Column(name = "bemerkung", columnDefinition = "text")
+    private String bemerkung;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -180,6 +187,22 @@ public class Contact {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFirma() {
+        return firma;
+    }
+
+    public void setFirma(String firma) {
+        this.firma = firma;
+    }
+
+    public String getBemerkung() {
+        return bemerkung;
+    }
+
+    public void setBemerkung(String bemerkung) {
+        this.bemerkung = bemerkung;
     }
 
     public LocalDateTime getCreatedAt() {

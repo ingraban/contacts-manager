@@ -150,6 +150,8 @@ public class ContactService {
         existing.setTelefon1(updatedContact.getTelefon1());
         existing.setTelefon2(updatedContact.getTelefon2());
         existing.setEmail(updatedContact.getEmail());
+        existing.setFirma(updatedContact.getFirma());
+        existing.setBemerkung(updatedContact.getBemerkung());
 
         // Update hashtags if provided
         if (hashtagIds != null) {
@@ -178,7 +180,7 @@ public class ContactService {
 
     /**
      * Normalisiert leere Felder zu null.
-     * Konvertiert leere Strings für Telefon und E-Mail zu null.
+     * Konvertiert leere Strings für optionale Felder (Telefon, E-Mail, Firma, Bemerkung) zu null.
      */
     private void normalizeEmptyFields(Contact contact) {
         if (contact.getTelefon1() != null && contact.getTelefon1().trim().isEmpty()) {
@@ -189,6 +191,12 @@ public class ContactService {
         }
         if (contact.getEmail() != null && contact.getEmail().trim().isEmpty()) {
             contact.setEmail(null);
+        }
+        if (contact.getFirma() != null && contact.getFirma().trim().isEmpty()) {
+            contact.setFirma(null);
+        }
+        if (contact.getBemerkung() != null && contact.getBemerkung().trim().isEmpty()) {
+            contact.setBemerkung(null);
         }
     }
 

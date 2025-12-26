@@ -27,7 +27,9 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
            "LOWER(COALESCE(c.anrede, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(COALESCE(c.telefon1, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(COALESCE(c.telefon2, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(COALESCE(c.email, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+           "LOWER(COALESCE(c.email, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.firma, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.bemerkung, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<Contact> searchContacts(@Param("searchTerm") String searchTerm);
 
     /**
