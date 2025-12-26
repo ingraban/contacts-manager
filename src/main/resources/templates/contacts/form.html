@@ -161,6 +161,25 @@
                       class="error"></span>
             </div>
 
+            <!-- Hashtags -->
+            <div class="form-group" th:if="${availableHashtags != null && !availableHashtags.empty}">
+                <label>Hashtags</label>
+                <div class="hashtag-selection">
+                    <div class="checkbox-item" th:each="hashtag : ${availableHashtags}">
+                        <input type="checkbox"
+                               name="hashtagIds"
+                               th:id="'hashtag-' + ${hashtag.id}"
+                               th:value="${hashtag.id}"
+                               th:checked="${contact.hashtags != null && contact.hashtags.contains(hashtag)}">
+                        <label th:for="'hashtag-' + ${hashtag.id}" th:text="${hashtag.name}"></label>
+                    </div>
+                </div>
+                <small class="form-hint">
+                    <i class="bi bi-info-circle"></i>
+                    Wählen Sie die zutreffenden Hashtags für diesen Kontakt aus
+                </small>
+            </div>
+
             <!-- Buttons -->
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary" th:title="${isEdit ? 'Aktualisieren' : 'Erstellen'}">

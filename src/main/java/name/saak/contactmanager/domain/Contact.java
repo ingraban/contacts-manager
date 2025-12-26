@@ -5,7 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "contact",
@@ -66,6 +68,14 @@ public class Contact {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "contact_hashtag",
+        joinColumns = @JoinColumn(name = "contact_id"),
+        inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    private Set<Hashtag> hashtags = new HashSet<>();
 
     // Lifecycle callbacks
     @PrePersist
@@ -178,6 +188,25 @@ public class Contact {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Set<Hashtag> getHashtags() {
+        return hashtags;
+    }
+
+    public void setHashtags(Set<Hashtag> hashtags) {
+        this.hashtags = hashtags;
+    }
+
+    // Helper methods for bidirectional relationship management
+    public void addHashtag(Hashtag hashtag) {
+        hashtags.add(hashtag);
+        hashtag.getContacts().add(this);
+    }
+
+    public void removeHashtag(Hashtag hashtag) {
+        hashtags.remove(hashtag);
+        hashtag.getContacts().remove(this);
     }
 
     // equals and hashCode based on business key (name + address)

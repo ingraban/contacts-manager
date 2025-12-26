@@ -3,6 +3,7 @@ package name.saak.contactmanager.controller;
 import jakarta.validation.Valid;
 import name.saak.contactmanager.domain.Contact;
 import name.saak.contactmanager.service.ContactService;
+import name.saak.contactmanager.service.HashtagService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,15 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/contacts")
 public class ContactController {
 
     private final ContactService contactService;
+    private final HashtagService hashtagService;
 
-    public ContactController(ContactService contactService) {
+    public ContactController(ContactService contactService, HashtagService hashtagService) {
         this.contactService = contactService;
+        this.hashtagService = hashtagService;
     }
 
     /**
@@ -48,6 +52,7 @@ public class ContactController {
     public String showCreateForm(Model model) {
         model.addAttribute("contact", new Contact());
         model.addAttribute("isEdit", false);
+        model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
         return "contacts/form";
     }
 
@@ -58,22 +63,25 @@ public class ContactController {
     public String createContact(
             @Valid @ModelAttribute("contact") Contact contact,
             BindingResult bindingResult,
+            @RequestParam(name = "hashtagIds", required = false) Set<Long> hashtagIds,
             Model model,
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("isEdit", false);
+            model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
             return "contacts/form";
         }
 
         try {
-            contactService.createContact(contact);
+            contactService.createContact(contact, hashtagIds);
             redirectAttributes.addFlashAttribute("successMessage",
                 "Kontakt erfolgreich erstellt");
             return "redirect:/contacts";
         } catch (ContactService.DuplicateContactException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("isEdit", false);
+            model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
             return "contacts/form";
         }
     }
@@ -89,6 +97,7 @@ public class ContactController {
 
         model.addAttribute("contact", contact);
         model.addAttribute("isEdit", true);
+        model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
         return "contacts/form";
     }
 
@@ -100,17 +109,19 @@ public class ContactController {
             @PathVariable Long id,
             @Valid @ModelAttribute("contact") Contact contact,
             BindingResult bindingResult,
+            @RequestParam(name = "hashtagIds", required = false) Set<Long> hashtagIds,
             Model model,
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("isEdit", true);
             contact.setId(id); // Preserve ID for form action
+            model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
             return "contacts/form";
         }
 
         try {
-            contactService.updateContact(id, contact);
+            contactService.updateContact(id, contact, hashtagIds);
             redirectAttributes.addFlashAttribute("successMessage",
                 "Kontakt erfolgreich aktualisiert");
             return "redirect:/contacts";
@@ -118,6 +129,7 @@ public class ContactController {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("isEdit", true);
             contact.setId(id);
+            model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
             return "contacts/form";
         } catch (ContactService.ContactNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

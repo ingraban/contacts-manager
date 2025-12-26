@@ -13,10 +13,12 @@ import java.util.Optional;
 public interface ContactRepository extends JpaRepository<Contact, Long> {
 
     /**
-     * Sucht Kontakte anhand eines Suchbegriffs.
+     * Sucht Kontakte anhand eines Suchbegriffs mit eager loading der Hashtags.
      * Durchsucht alle Felder mit SQL LIKE (case-insensitive).
      */
-    @Query("SELECT c FROM Contact c WHERE " +
+    @Query("SELECT DISTINCT c FROM Contact c " +
+           "LEFT JOIN FETCH c.hashtags h " +
+           "WHERE (h IS NULL OR h.gesperrt = false) AND (" +
            "LOWER(c.vorname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.nachname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.strasse) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -25,12 +27,16 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
            "LOWER(COALESCE(c.anrede, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(COALESCE(c.telefon1, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(COALESCE(c.telefon2, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(COALESCE(c.email, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+           "LOWER(COALESCE(c.email, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<Contact> searchContacts(@Param("searchTerm") String searchTerm);
 
     /**
-     * Findet alle Kontakte sortiert nach Nachname, dann Vorname.
+     * Findet alle Kontakte sortiert nach Nachname, dann Vorname mit eager loading der Hashtags.
      */
+    @Query("SELECT DISTINCT c FROM Contact c " +
+           "LEFT JOIN FETCH c.hashtags h " +
+           "WHERE h IS NULL OR h.gesperrt = false " +
+           "ORDER BY c.nachname ASC, c.vorname ASC")
     List<Contact> findAllByOrderByNachnameAscVornameAsc();
 
     /**
@@ -55,4 +61,33 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
      * Findet Kontakte nach Ort.
      */
     List<Contact> findByOrtIgnoreCaseOrderByNachnameAsc(String ort);
+
+    /**
+     * Findet Kontakte die ALLE angegebenen Hashtags haben (AND-Logik) mit eager loading.
+     * Nur aktive (nicht gesperrte) Hashtags werden berücksichtigt.
+     */
+    @Query("SELECT DISTINCT c FROM Contact c " +
+           "LEFT JOIN FETCH c.hashtags " +
+           "WHERE c.id IN (" +
+           "  SELECT c2.id FROM Contact c2 " +
+           "  JOIN c2.hashtags h " +
+           "  WHERE LOWER(h.name) IN :hashtagNames " +
+           "  AND h.gesperrt = false " +
+           "  GROUP BY c2.id " +
+           "  HAVING COUNT(DISTINCT h.name) = :count" +
+           ") " +
+           "ORDER BY c.nachname ASC, c.vorname ASC")
+    List<Contact> findByAllHashtags(
+        @Param("hashtagNames") List<String> hashtagNames,
+        @Param("count") long count
+    );
+
+    /**
+     * Findet einen Kontakt mit eager loading aller Hashtags.
+     * Verhindert N+1 Probleme beim Laden der Hashtags.
+     */
+    @Query("SELECT DISTINCT c FROM Contact c " +
+           "LEFT JOIN FETCH c.hashtags " +
+           "WHERE c.id = :id")
+    Optional<Contact> findByIdWithActiveHashtags(@Param("id") Long id);
 }

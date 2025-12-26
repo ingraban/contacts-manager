@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-add-test-hashtags
+      author: saak
+      context: test
+      changes:
+        - insert:
+            tableName: hashtag
+            columns:
+              - column:
+                  name: name
+                  value: "#familie"
+              - column:
+                  name: beschreibung
+                  value: "Familienmitglieder"
+              - column:
+                  name: gesperrt
+                  valueBoolean: false
+
+        - insert:
+            tableName: hashtag
+            columns:
+              - column:
+                  name: name
+                  value: "#freunde"
+              - column:
+                  name: beschreibung
+                  value: "Freunde und Bekannte"
+              - column:
+                  name: gesperrt
+                  valueBoolean: false
+
+        - insert:
+            tableName: hashtag
+            columns:
+              - column:
+                  name: name
+                  value: "#geschaeftlich"
+              - column:
+                  name: beschreibung
+                  value: "Geschäftskontakte"
+              - column:
+                  name: gesperrt
+                  valueBoolean: false
+
+        - insert:
+            tableName: hashtag
+            columns:
+              - column:
+                  name: name
+                  value: "#archiv"
+              - column:
+                  name: beschreibung
+                  value: "Alte Kontakte"
+              - column:
+                  name: gesperrt
+                  valueBoolean: true

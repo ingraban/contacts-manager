@@ -53,7 +53,7 @@ class ContactServiceTest {
     @Test
     void shouldFindContactById() {
         // Given
-        when(contactRepository.findById(1L)).thenReturn(Optional.of(testContact));
+        when(contactRepository.findByIdWithActiveHashtags(1L)).thenReturn(Optional.of(testContact));
 
         // When
         Optional<Contact> found = contactService.findContactById(1L);
@@ -61,7 +61,7 @@ class ContactServiceTest {
         // Then
         assertThat(found).isPresent();
         assertThat(found.get().getVorname()).isEqualTo("Max");
-        verify(contactRepository).findById(1L);
+        verify(contactRepository).findByIdWithActiveHashtags(1L);
     }
 
     @Test

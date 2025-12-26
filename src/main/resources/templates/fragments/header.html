@@ -10,6 +10,7 @@
       <h1>Sommerhausen Office Suite</h1>
       <nav class="nav">
         <a href="/contacts" th:classappend="${activePage == 'contacts'} ? 'active' : ''">Kontakte</a>
+        <a href="/hashtags" th:classappend="${activePage == 'hashtags'} ? 'active' : ''">Hashtags</a>
         <form th:action="@{/logout}" method="post">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
           <button type="submit">Abmelden</button>

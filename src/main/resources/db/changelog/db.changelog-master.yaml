@@ -5,3 +5,9 @@ databaseChangeLog:
       file: db/changelog/changes/002-add-test-data.yaml
   - include:
       file: db/changelog/changes/003-alter-anrede-column.yaml
+  - include:
+      file: db/changelog/changes/004-create-hashtags-table.yaml
+  - include:
+      file: db/changelog/changes/005-create-contact-hashtag-table.yaml
+  - include:
+      file: db/changelog/changes/006-add-test-hashtags.yaml
