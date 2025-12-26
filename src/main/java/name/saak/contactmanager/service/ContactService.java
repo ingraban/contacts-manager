@@ -52,6 +52,7 @@ public class ContactService {
      */
     public Contact createContact(Contact contact) {
         validateUniqueConstraint(contact, null);
+        normalizeEmptyFields(contact);
         return contactRepository.save(contact);
     }
 
@@ -65,6 +66,7 @@ public class ContactService {
             .orElseThrow(() -> new ContactNotFoundException("Kontakt mit ID " + id + " nicht gefunden"));
 
         validateUniqueConstraint(updatedContact, id);
+        normalizeEmptyFields(updatedContact);
 
         // Update fields
         existing.setAnrede(updatedContact.getAnrede());
@@ -88,6 +90,22 @@ public class ContactService {
             throw new ContactNotFoundException("Kontakt mit ID " + id + " nicht gefunden");
         }
         contactRepository.deleteById(id);
+    }
+
+    /**
+     * Normalisiert leere Felder zu null.
+     * Konvertiert leere Strings für Telefon und E-Mail zu null.
+     */
+    private void normalizeEmptyFields(Contact contact) {
+        if (contact.getTelefon1() != null && contact.getTelefon1().trim().isEmpty()) {
+            contact.setTelefon1(null);
+        }
+        if (contact.getTelefon2() != null && contact.getTelefon2().trim().isEmpty()) {
+            contact.setTelefon2(null);
+        }
+        if (contact.getEmail() != null && contact.getEmail().trim().isEmpty()) {
+            contact.setEmail(null);
+        }
     }
 
     /**
