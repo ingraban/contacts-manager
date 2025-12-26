@@ -1,0 +1,153 @@
+package name.saak.contactmanager.controller;
+
+import jakarta.validation.Valid;
+import name.saak.contactmanager.domain.Contact;
+import name.saak.contactmanager.service.ContactService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/contacts")
+public class ContactController {
+
+    private final ContactService contactService;
+
+    public ContactController(ContactService contactService) {
+        this.contactService = contactService;
+    }
+
+    /**
+     * Zeigt die Kontaktliste mit optionaler Suche.
+     */
+    @GetMapping
+    public String listContacts(
+            @RequestParam(name = "search", required = false) String searchTerm,
+            Model model) {
+        List<Contact> contacts;
+
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            contacts = contactService.searchContacts(searchTerm);
+            model.addAttribute("searchTerm", searchTerm);
+        } else {
+            contacts = contactService.findAllContacts();
+        }
+
+        model.addAttribute("contacts", contacts);
+        return "contacts/list";
+    }
+
+    /**
+     * Zeigt das Formular zum Erstellen eines neuen Kontakts.
+     */
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("contact", new Contact());
+        model.addAttribute("isEdit", false);
+        return "contacts/form";
+    }
+
+    /**
+     * Speichert einen neuen Kontakt.
+     */
+    @PostMapping
+    public String createContact(
+            @Valid @ModelAttribute("contact") Contact contact,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEdit", false);
+            return "contacts/form";
+        }
+
+        try {
+            contactService.createContact(contact);
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Kontakt erfolgreich erstellt");
+            return "redirect:/contacts";
+        } catch (ContactService.DuplicateContactException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("isEdit", false);
+            return "contacts/form";
+        }
+    }
+
+    /**
+     * Zeigt das Formular zum Bearbeiten eines Kontakts.
+     */
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Contact contact = contactService.findContactById(id)
+            .orElseThrow(() -> new ContactService.ContactNotFoundException(
+                "Kontakt mit ID " + id + " nicht gefunden"));
+
+        model.addAttribute("contact", contact);
+        model.addAttribute("isEdit", true);
+        return "contacts/form";
+    }
+
+    /**
+     * Aktualisiert einen bestehenden Kontakt.
+     */
+    @PostMapping("/{id}")
+    public String updateContact(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("contact") Contact contact,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEdit", true);
+            contact.setId(id); // Preserve ID for form action
+            return "contacts/form";
+        }
+
+        try {
+            contactService.updateContact(id, contact);
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Kontakt erfolgreich aktualisiert");
+            return "redirect:/contacts";
+        } catch (ContactService.DuplicateContactException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("isEdit", true);
+            contact.setId(id);
+            return "contacts/form";
+        } catch (ContactService.ContactNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/contacts";
+        }
+    }
+
+    /**
+     * Löscht einen Kontakt.
+     */
+    @PostMapping("/{id}/delete")
+    public String deleteContact(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            contactService.deleteContact(id);
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Kontakt erfolgreich gelöscht");
+        } catch (ContactService.ContactNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/contacts";
+    }
+
+    /**
+     * Exception handler für ContactNotFoundException.
+     */
+    @ExceptionHandler(ContactService.ContactNotFoundException.class)
+    public String handleContactNotFound(
+            ContactService.ContactNotFoundException e,
+            RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/contacts";
+    }
+}

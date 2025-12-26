@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-add-test-data
+      author: saak
+      context: test
+      changes:
+        - insert:
+            tableName: contact
+            columns:
+              - column: {name: anrede, value: "Herr"}
+              - column: {name: vorname, value: "Max"}
+              - column: {name: nachname, value: "Mustermann"}
+              - column: {name: strasse, value: "Hauptstraße 1"}
+              - column: {name: postleitzahl, value: "12345"}
+              - column: {name: ort, value: "Berlin"}
+              - column: {name: telefon1, value: "030-12345678"}
+              - column: {name: telefon2, value: "0171-1234567"}
+              - column: {name: email, value: "max@example.com"}
+
+        - insert:
+            tableName: contact
+            columns:
+              - column: {name: anrede, value: "Frau"}
+              - column: {name: vorname, value: "Erika"}
+              - column: {name: nachname, value: "Musterfrau"}
+              - column: {name: strasse, value: "Nebenstraße 5"}
+              - column: {name: postleitzahl, value: "54321"}
+              - column: {name: ort, value: "München"}
+              - column: {name: telefon1, value: "089-87654321"}
+              - column: {name: email, value: "erika@example.com"}
+
+        - insert:
+            tableName: contact
+            columns:
+              - column: {name: vorname, value: "Hans"}
+              - column: {name: nachname, value: "Schmidt"}
+              - column: {name: strasse, value: "Dorfstraße 10"}
+              - column: {name: postleitzahl, value: "67890"}
+              - column: {name: ort, value: "Hamburg"}

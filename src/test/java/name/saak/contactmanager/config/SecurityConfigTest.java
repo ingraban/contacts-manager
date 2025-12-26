@@ -81,7 +81,7 @@ class SecurityConfigTest {
 				.andExpect(status().isOk())
 				.andExpect(header().exists("Content-Security-Policy"))
 				.andExpect(header().string("Content-Security-Policy",
-					"default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none';"))
+					"default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; script-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none';"))
 				.andExpect(header().exists("X-Content-Type-Options"))
 				.andExpect(header().string("X-Content-Type-Options", "nosniff"))
 				.andExpect(header().exists("X-Frame-Options"))

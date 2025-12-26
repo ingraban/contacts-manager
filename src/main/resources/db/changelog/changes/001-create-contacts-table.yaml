@@ -1,0 +1,91 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-contacts-table
+      author: saak
+      changes:
+        - createTable:
+            tableName: contact
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: anrede
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: vorname
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nachname
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: strasse
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: postleitzahl
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ort
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: telefon1
+                  type: varchar(30)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: telefon2
+                  type: varchar(30)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: contact
+            columnNames: vorname, nachname, strasse, postleitzahl, ort
+            constraintName: uk_contact_name_address
+
+        - createIndex:
+            tableName: contact
+            indexName: idx_contact_nachname
+            columns:
+              - column:
+                  name: nachname
+
+        - createIndex:
+            tableName: contact
+            indexName: idx_contact_ort
+            columns:
+              - column:
+                  name: ort
