@@ -32,12 +32,13 @@
             <!-- Anrede -->
             <div class="form-group">
                 <label for="anrede">Anrede</label>
-                <select id="anrede" th:field="*{anrede}" class="form-control">
-                    <option value="">Bitte wählen</option>
-                    <option value="Herr">Herr</option>
-                    <option value="Frau">Frau</option>
-                    <option value="Divers">Divers</option>
-                </select>
+                <input type="text"
+                       id="anrede"
+                       th:field="*{anrede}"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('anrede')} ? 'error-input' : ''"
+                       maxlength="100"
+                       placeholder="z.B. Herr, Frau, Dr., Prof. Dr.">
                 <span th:if="${#fields.hasErrors('anrede')}"
                       th:errors="*{anrede}"
                       class="error"></span>

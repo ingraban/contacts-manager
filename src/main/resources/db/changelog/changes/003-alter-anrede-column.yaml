@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-alter-anrede-column
+      author: saak
+      changes:
+        - modifyDataType:
+            tableName: contact
+            columnName: anrede
+            newDataType: varchar(100)

@@ -69,9 +69,11 @@
             <tbody>
                 <tr th:each="contact : ${contacts}">
                     <td>
-                        <span th:if="${contact.anrede}" th:text="${contact.anrede}"></span>
-                        <span th:text="${contact.vorname}"></span>
-                        <span th:text="${contact.nachname}"></span>
+                        <div th:if="${contact.anrede}" th:text="${contact.anrede}"></div>
+						<div>
+	                        <span th:text="${contact.vorname}"></span>
+	                        <span th:text="${contact.nachname}"></span>
+						</div>
                     </td>
                     <td>
                         <div th:text="${contact.strasse}"></div>

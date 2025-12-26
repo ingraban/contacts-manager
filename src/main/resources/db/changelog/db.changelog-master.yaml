@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/001-create-contacts-table.yaml
   - include:
       file: db/changelog/changes/002-add-test-data.yaml
+  - include:
+      file: db/changelog/changes/003-alter-anrede-column.yaml

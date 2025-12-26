@@ -19,7 +19,8 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "anrede", length = 20)
+    @Size(max = 100, message = "Anrede darf maximal 100 Zeichen lang sein")
+    @Column(name = "anrede", length = 100)
     private String anrede;
 
     @NotBlank(message = "Vorname ist erforderlich")
