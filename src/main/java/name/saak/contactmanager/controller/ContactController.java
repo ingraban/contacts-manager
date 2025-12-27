@@ -3,15 +3,21 @@ package name.saak.contactmanager.controller;
 import jakarta.validation.Valid;
 import name.saak.contactmanager.domain.Contact;
 import name.saak.contactmanager.service.ContactService;
+import name.saak.contactmanager.service.ExcelExportService;
 import name.saak.contactmanager.service.HashtagService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/contacts")
@@ -19,10 +25,13 @@ public class ContactController {
 
     private final ContactService contactService;
     private final HashtagService hashtagService;
+    private final ExcelExportService excelExportService;
 
-    public ContactController(ContactService contactService, HashtagService hashtagService) {
+    public ContactController(ContactService contactService, HashtagService hashtagService,
+                            ExcelExportService excelExportService) {
         this.contactService = contactService;
         this.hashtagService = hashtagService;
+        this.excelExportService = excelExportService;
     }
 
     /**
@@ -150,6 +159,40 @@ public class ContactController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "redirect:/contacts";
+    }
+
+    /**
+     * Exportiert ausgewählte Kontakte als Excel-Datei.
+     */
+    @PostMapping("/export")
+    public ResponseEntity<byte[]> exportContacts(
+            @RequestParam(name = "contactIds", required = false) List<Long> contactIds) {
+        try {
+            List<Contact> contacts;
+
+            if (contactIds != null && !contactIds.isEmpty()) {
+                // Exportiere nur ausgewählte Kontakte
+                contacts = contactIds.stream()
+                    .map(id -> contactService.findContactById(id).orElse(null))
+                    .filter(contact -> contact != null)
+                    .collect(Collectors.toList());
+            } else {
+                // Exportiere alle Kontakte wenn keine Auswahl
+                contacts = contactService.findAllContacts();
+            }
+
+            byte[] excelData = excelExportService.exportContactsToExcel(contacts);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "kontakte.xlsx");
+
+            return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelData);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**

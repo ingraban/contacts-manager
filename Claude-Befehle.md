@@ -305,3 +305,21 @@ Business Rules:
  - Test AND logic for multi-hashtag search
  - Test locked hashtag filtering
  - Verify bidirectional relationship integrity
+
+ ## Export als Excel
+
+Ich möchte jetzt die Kontakte als Excel Datei exportieren können.
+Dazu sollen alle Kontakte, die selektiert wurden als Excel-Datei heruntergeladen werden.
+Im Excel gibt es die Spalten
+
+- Firma
+- Anrede
+- Vorname_Name (Bestehend aus dem Vornamen und einem Leerzeichen, wenn der Vorname existiert) und dem Nachnamen
+- Straße
+- PLZ/Ort (Postleitzahl und Leerzeichen, wenn Postleitzahl existiert und Ort)
+
+Die Excel soll als XLSX Datei erstellt werden mit Überschriften.
+
+Als Test sollen die Testdaten vollständig exportiert werden. Das Ergebnis muss inhaltlich mit der Datei src/test/resources/Export.xlsx übereinstimmen.
+
+Führe alle Tests aus und stelle sicher, dass sie durchlaufen.
