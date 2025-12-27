@@ -20,4 +20,64 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Hashtag-Zuweisung Modal-Funktionalität
+    const assignHashtagBtn = document.getElementById('assignHashtagBtn');
+    const hashtagModal = document.getElementById('hashtagModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const assignHashtagForm = document.getElementById('assignHashtagForm');
+
+    if (assignHashtagBtn && hashtagModal) {
+        // Open Modal
+        assignHashtagBtn.addEventListener('click', function() {
+            const checkedBoxes = document.querySelectorAll('.contact-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens einen Kontakt aus.');
+                return;
+            }
+
+            // Clear previous hidden inputs
+            const container = document.getElementById('selectedContactIdsContainer');
+            container.innerHTML = '';
+
+            // Add hidden inputs for selected contact IDs
+            checkedBoxes.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'contactIds';
+                input.value = cb.value;
+                container.appendChild(input);
+            });
+
+            // Update info text
+            const infoText = document.getElementById('selectedContactsInfo');
+            infoText.textContent = `${checkedBoxes.length} Kontakt(e) ausgewählt`;
+
+            // Show modal
+            hashtagModal.style.display = 'flex';
+        });
+
+        // Close Modal
+        const closeModal = function() {
+            hashtagModal.style.display = 'none';
+            document.getElementById('hashtagSelect').value = '';
+        };
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeModal);
+        }
+
+        if (cancelModalBtn) {
+            cancelModalBtn.addEventListener('click', closeModal);
+        }
+
+        // Close modal when clicking outside
+        hashtagModal.addEventListener('click', function(e) {
+            if (e.target === hashtagModal) {
+                closeModal();
+            }
+        });
+    }
 });

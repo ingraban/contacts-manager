@@ -107,11 +107,15 @@
         <form id="exportForm" method="post" th:action="@{/contacts/export}" th:unless="${contacts.empty}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-            <!-- Export Button inside form -->
+            <!-- Action Buttons inside form -->
             <div class="action-section" style="margin-bottom: 1rem;">
                 <button type="submit" class="btn btn-secondary" title="Ausgewählte exportieren">
                     <i class="bi bi-file-earmark-excel"></i>
                     Export
+                </button>
+                <button type="button" class="btn btn-secondary" id="assignHashtagBtn" title="Hashtag den ausgewählten Kontakten zuweisen">
+                    <i class="bi bi-tag"></i>
+                    Hashtag zuweisen
                 </button>
             </div>
             <table class="contact-table">
@@ -196,6 +200,41 @@
             </tbody>
         </table>
         </form>
+
+        <!-- Modal für Hashtag-Zuweisung -->
+        <div id="hashtagModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Hashtag zuweisen</h2>
+                    <button type="button" class="close-modal" id="closeModalBtn">&times;</button>
+                </div>
+                <form id="assignHashtagForm" method="post" th:action="@{/contacts/assign-hashtag}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div id="selectedContactIdsContainer"></div>
+
+                    <div class="modal-body">
+                        <p id="selectedContactsInfo" style="margin-bottom: 1rem; color: #666;"></p>
+
+                        <div class="form-group">
+                            <label for="hashtagSelect">Wählen Sie einen Hashtag:</label>
+                            <select id="hashtagSelect" name="hashtagId" class="form-control" required>
+                                <option value="">-- Bitte wählen --</option>
+                                <option th:each="hashtag : ${availableHashtags}"
+                                        th:value="${hashtag.id}"
+                                        th:text="${hashtag.name}"
+                                        th:if="${!hashtag.gesperrt}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelModalBtn">Abbrechen</button>
+                        <button type="submit" class="btn btn-primary">Zuweisen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </main>
 
     <script th:src="@{/js/app.js}"></script>

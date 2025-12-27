@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -102,7 +103,7 @@ public class ContactService {
         validateUniqueConstraint(contact, null);
         normalizeEmptyFields(contact);
 
-        // Hashtags zuordnen (nur aktive)
+        // Hashtags zuordnen (nur aktive) - use helper method for bidirectional relationship
         if (hashtagIds != null && !hashtagIds.isEmpty()) {
             Set<Hashtag> hashtags = hashtagIds.stream()
                 .map(hashtagRepository::findById)
@@ -110,7 +111,7 @@ public class ContactService {
                 .map(Optional::get)
                 .filter(h -> !h.isGesperrt())
                 .collect(Collectors.toSet());
-            contact.setHashtags(hashtags);
+            hashtags.forEach(contact::addHashtag);
         }
 
         return contactRepository.save(contact);
@@ -153,16 +154,20 @@ public class ContactService {
         existing.setFirma(updatedContact.getFirma());
         existing.setBemerkung(updatedContact.getBemerkung());
 
-        // Update hashtags if provided
-        if (hashtagIds != null) {
-            existing.getHashtags().clear();
+        // Update hashtags - properly manage bidirectional relationship
+        // First, remove all existing hashtags using the helper method
+        Set<Hashtag> existingHashtags = new HashSet<>(existing.getHashtags());
+        existingHashtags.forEach(existing::removeHashtag);
+
+        // Then add the new ones (if any provided)
+        if (hashtagIds != null && !hashtagIds.isEmpty()) {
             Set<Hashtag> hashtags = hashtagIds.stream()
                 .map(hashtagRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(h -> !h.isGesperrt())
                 .collect(Collectors.toSet());
-            existing.setHashtags(hashtags);
+            hashtags.forEach(existing::addHashtag);
         }
 
         return contactRepository.save(existing);
@@ -216,6 +221,36 @@ public class ContactService {
             throw new DuplicateContactException(
                 "Ein Kontakt mit diesem Namen und dieser Adresse existiert bereits"
             );
+        }
+    }
+
+    /**
+     * Weist mehreren Kontakten einen Hashtag zu.
+     *
+     * @param contactIds Liste der Kontakt-IDs
+     * @param hashtagId ID des zuzuweisenden Hashtags
+     */
+    public void assignHashtagToContacts(List<Long> contactIds, Long hashtagId) {
+        // Lade Hashtag
+        Hashtag hashtag = hashtagRepository.findById(hashtagId)
+            .orElseThrow(() -> new IllegalArgumentException("Hashtag mit ID " + hashtagId + " nicht gefunden"));
+
+        // Prüfe ob Hashtag gesperrt ist
+        if (hashtag.isGesperrt()) {
+            throw new IllegalArgumentException("Gesperrte Hashtags können nicht zugewiesen werden");
+        }
+
+        // Lade alle Kontakte und füge Hashtag hinzu
+        for (Long contactId : contactIds) {
+            Optional<Contact> optionalContact = contactRepository.findById(contactId);
+            if (optionalContact.isPresent()) {
+                Contact contact = optionalContact.get();
+                // Füge Hashtag nur hinzu wenn er noch nicht zugewiesen ist
+                if (!contact.getHashtags().contains(hashtag)) {
+                    contact.addHashtag(hashtag);
+                    contactRepository.save(contact);
+                }
+            }
         }
     }
 

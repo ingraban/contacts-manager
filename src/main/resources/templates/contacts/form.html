@@ -191,13 +191,15 @@
             <!-- Hashtags -->
             <div class="form-group" th:if="${availableHashtags != null && !availableHashtags.empty}">
                 <label>Hashtags</label>
+                <!-- Hidden field to ensure parameter is always sent, even when empty -->
+                <input type="hidden" name="_hashtagIds" value="on">
                 <div class="hashtag-selection">
                     <div class="checkbox-item" th:each="hashtag : ${availableHashtags}">
                         <input type="checkbox"
                                name="hashtagIds"
                                th:id="'hashtag-' + ${hashtag.id}"
                                th:value="${hashtag.id}"
-                               th:checked="${contact.hashtags != null && contact.hashtags.contains(hashtag)}">
+                               th:checked="${contact.hashtags != null && #lists.contains(contact.hashtags.![id], hashtag.id)}">
                         <label th:for="'hashtag-' + ${hashtag.id}" th:text="${hashtag.name}"></label>
                     </div>
                 </div>

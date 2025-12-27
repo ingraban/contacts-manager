@@ -323,3 +323,9 @@ Die Excel soll als XLSX Datei erstellt werden mit Überschriften.
 Als Test sollen die Testdaten vollständig exportiert werden. Das Ergebnis muss inhaltlich mit der Datei src/test/resources/Export.xlsx übereinstimmen.
 
 Führe alle Tests aus und stelle sicher, dass sie durchlaufen.
+
+## Hashtags an alle selektierten zuweisen
+
+Man kann jetzt Daten in der Liste selektieren.
+Jetzt sollen diese Daten auch mit einem neuen bzw. weiteren Hashtag verknüpft werden. 
+Dazu soll es neben dem Export-Knopf einen Knopf Hashtag zuweisen geben, der dann den Hashtag auswählen lässt und dann diesen den selektierten Kontakten zuordnet.

@@ -51,6 +51,7 @@ public class ContactController {
         }
 
         model.addAttribute("contacts", contacts);
+        model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
         return "contacts/list";
     }
 
@@ -193,6 +194,25 @@ public class ContactController {
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    /**
+     * Weist ausgewählten Kontakten einen Hashtag zu.
+     */
+    @PostMapping("/assign-hashtag")
+    public String assignHashtagToContacts(
+            @RequestParam(name = "contactIds") List<Long> contactIds,
+            @RequestParam(name = "hashtagId") Long hashtagId,
+            RedirectAttributes redirectAttributes) {
+        try {
+            contactService.assignHashtagToContacts(contactIds, hashtagId);
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Hashtag erfolgreich " + contactIds.size() + " Kontakt(en) zugewiesen");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                "Fehler beim Zuweisen des Hashtags: " + e.getMessage());
+        }
+        return "redirect:/contacts";
     }
 
     /**
