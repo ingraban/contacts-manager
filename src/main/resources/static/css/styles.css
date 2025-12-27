@@ -616,3 +616,39 @@ button.submit-btn:hover {
 .contact-bemerkung i {
     font-size: 0.9rem;
 }
+
+/* Hashtag row spanning all columns */
+.hashtag-row {
+	border-top: none !important;
+    /* background-color: #f8f9fa; */
+}
+
+.hashtag-row td {
+    padding: 0.5rem 1rem !important;
+    border-top: none !important;
+}
+
+/* Remove bottom border from contact row if followed by hashtag row */
+tr:has(+ .hashtag-row) td {
+    border-bottom: none !important;
+}
+
+/* Alternative for browsers that don't support :has() */
+.contact-table tbody tr td {
+    border-bottom: 1px solid #ddd;
+}
+
+.contact-table tbody .hashtag-row td {
+    border-bottom: 1px solid #ddd;
+}
+
+.contact-table tbody tr:not(.hashtag-row) + .hashtag-row td {
+    padding-top: 0 !important;
+}
+
+.hashtag-list-full {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}

@@ -115,61 +115,68 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="contact : ${contacts}">
-                    <td>
-                        <div th:if="${contact.anrede}" th:text="${contact.anrede}"></div>
-						<div>
-	                        <span th:text="${contact.vorname}"></span>
-	                        <span th:text="${contact.nachname}"></span>
-						</div>
-                        <div th:if="${contact.firma}" class="contact-firma" th:text="${contact.firma}"></div>
-                        <div class="hashtag-list" th:if="${!contact.hashtags.empty}">
-                            <span th:each="hashtag : ${contact.hashtags}"
-                                  th:if="${!hashtag.gesperrt}"
-                                  class="hashtag-badge"
-                                  th:text="${hashtag.name}"></span>
-                        </div>
-                        <div th:if="${contact.bemerkung}" class="contact-bemerkung" th:title="${contact.bemerkung}">
-                            <i class="bi bi-info-circle"></i>
-                            <span th:text="${#strings.abbreviate(contact.bemerkung, 50)}"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div th:text="${contact.strasse}"></div>
-                        <div>
-                            <span th:text="${contact.postleitzahl}"></span>
-                            <span th:text="${contact.ort}"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div th:if="${contact.telefon1}" th:text="${contact.telefon1}"></div>
-                        <div th:if="${contact.telefon2}" th:text="${contact.telefon2}"></div>
-                        <span th:if="${contact.telefon1 == null && contact.telefon2 == null}">-</span>
-                    </td>
-                    <td>
-                        <a th:if="${contact.email}"
-                           th:href="'mailto:' + ${contact.email}"
-                           th:text="${contact.email}"></a>
-                        <span th:unless="${contact.email}">-</span>
-                    </td>
-                    <td class="actions">
-                        <a th:href="@{/contacts/{id}/edit(id=${contact.id})}"
-                           class="btn btn-small btn-secondary"
-                           title="Bearbeiten">
-                            <i class="bi bi-pencil"></i>
-                        </a>
+                <th:block th:each="contact : ${contacts}">
+                    <tr>
+                        <td>
+                            <div th:if="${contact.anrede}" th:text="${contact.anrede}"></div>
+                            <div>
+                                <span th:text="${contact.vorname}"></span>
+                                <span th:text="${contact.nachname}"></span>
+                            </div>
+                            <div th:if="${contact.firma}" class="contact-firma" th:text="${contact.firma}"></div>
+                            <div th:if="${contact.bemerkung}" class="contact-bemerkung" th:title="${contact.bemerkung}">
+                                <i class="bi bi-info-circle"></i>
+                                <span th:text="${#strings.abbreviate(contact.bemerkung, 50)}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div th:text="${contact.strasse}"></div>
+                            <div>
+                                <span th:text="${contact.postleitzahl}"></span>
+                                <span th:text="${contact.ort}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div th:if="${contact.telefon1}" th:text="${contact.telefon1}"></div>
+                            <div th:if="${contact.telefon2}" th:text="${contact.telefon2}"></div>
+                            <span th:if="${contact.telefon1 == null && contact.telefon2 == null}">-</span>
+                        </td>
+                        <td>
+                            <a th:if="${contact.email}"
+                               th:href="'mailto:' + ${contact.email}"
+                               th:text="${contact.email}"></a>
+                            <span th:unless="${contact.email}">-</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/contacts/{id}/edit(id=${contact.id})}"
+                               class="btn btn-small btn-secondary"
+                               title="Bearbeiten">
+                                <i class="bi bi-pencil"></i>
+                            </a>
 
-                        <form method="post"
-                              th:action="@{/contacts/{id}/delete(id=${contact.id})}"
-                              style="display: inline;"
-                              onsubmit="return confirm('Möchten Sie diesen Kontakt wirklich löschen?');">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <button type="submit" class="btn btn-small btn-danger" title="Löschen">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                            <form method="post"
+                                  th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Möchten Sie diesen Kontakt wirklich löschen?');">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button type="submit" class="btn btn-small btn-danger" title="Löschen">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Hashtag row spanning all columns -->
+                    <tr th:if="${!contact.hashtags.empty}" class="hashtag-row">
+                        <td colspan="5">
+                            <div class="hashtag-list-full">
+                                <span th:each="hashtag : ${contact.hashtags}"
+                                      th:if="${!hashtag.gesperrt}"
+                                      class="hashtag-badge"
+                                      th:text="${hashtag.name}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
             </tbody>
         </table>
     </main>
