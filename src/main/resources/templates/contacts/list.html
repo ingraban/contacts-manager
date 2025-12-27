@@ -86,13 +86,6 @@
             </form>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="action-section">
-            <a th:href="@{/contacts/new}" class="btn btn-primary" title="Neuer Kontakt">
-                <i class="bi bi-plus-lg"></i>
-            </a>
-        </div>
-
         <!-- Results Info -->
         <p th:if="${searchTerm}" class="results-info">
             <span th:text="${contacts.size()}">0</span> Kontakt(e) gefunden für:
@@ -102,14 +95,24 @@
         <!-- Contact Table -->
         <div th:if="${contacts.empty}" class="empty-state">
             <p>Keine Kontakte gefunden.</p>
+            <div class="action-section" style="margin-top: 1rem;">
+                <a th:href="@{/contacts/new}" class="btn btn-primary" title="Neuer Kontakt">
+                    <i class="bi bi-plus-lg"></i>
+                    Neuer Kontakt
+                </a>
+            </div>
         </div>
 
         <form id="exportForm" method="post" th:action="@{/contacts/export}" th:unless="${contacts.empty}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-            <!-- Action Buttons inside form -->
+            <!-- Action Buttons -->
             <div class="action-section" style="margin-bottom: 1rem;">
-                <button type="submit" class="btn btn-secondary" title="Ausgewählte exportieren">
+                <a th:href="@{/contacts/new}" class="btn btn-primary" title="Neuer Kontakt erstellen">
+                    <i class="bi bi-plus-lg"></i>
+                    Neuer Kontakt
+                </a>
+                <button type="submit" class="btn btn-secondary" title="Ausgewählte Kontakte exportieren">
                     <i class="bi bi-file-earmark-excel"></i>
                     Export
                 </button>
