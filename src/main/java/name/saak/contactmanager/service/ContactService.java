@@ -255,6 +255,31 @@ public class ContactService {
     }
 
     /**
+     * Entfernt einen Hashtag von mehreren Kontakten.
+     *
+     * @param contactIds Liste der Kontakt-IDs
+     * @param hashtagId ID des zu entfernenden Hashtags
+     */
+    public void removeHashtagFromContacts(List<Long> contactIds, Long hashtagId) {
+        // Lade Hashtag
+        Hashtag hashtag = hashtagRepository.findById(hashtagId)
+            .orElseThrow(() -> new IllegalArgumentException("Hashtag mit ID " + hashtagId + " nicht gefunden"));
+
+        // Lade alle Kontakte und entferne Hashtag
+        for (Long contactId : contactIds) {
+            Optional<Contact> optionalContact = contactRepository.findById(contactId);
+            if (optionalContact.isPresent()) {
+                Contact contact = optionalContact.get();
+                // Entferne Hashtag nur wenn er zugewiesen ist
+                if (contact.getHashtags().contains(hashtag)) {
+                    contact.removeHashtag(hashtag);
+                    contactRepository.save(contact);
+                }
+            }
+        }
+    }
+
+    /**
      * Exception für nicht gefundene Kontakte.
      */
     public static class ContactNotFoundException extends RuntimeException {

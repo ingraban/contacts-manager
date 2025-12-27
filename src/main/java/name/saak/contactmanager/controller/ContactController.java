@@ -216,6 +216,25 @@ public class ContactController {
     }
 
     /**
+     * Entfernt einen Hashtag von ausgewählten Kontakten.
+     */
+    @PostMapping("/remove-hashtag")
+    public String removeHashtagFromContacts(
+            @RequestParam(name = "contactIds") List<Long> contactIds,
+            @RequestParam(name = "hashtagId") Long hashtagId,
+            RedirectAttributes redirectAttributes) {
+        try {
+            contactService.removeHashtagFromContacts(contactIds, hashtagId);
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Hashtag erfolgreich von " + contactIds.size() + " Kontakt(en) entfernt");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                "Fehler beim Entfernen des Hashtags: " + e.getMessage());
+        }
+        return "redirect:/contacts";
+    }
+
+    /**
      * Exception handler für ContactNotFoundException.
      */
     @ExceptionHandler(ContactService.ContactNotFoundException.class)

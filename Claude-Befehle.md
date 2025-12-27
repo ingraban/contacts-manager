@@ -329,3 +329,7 @@ Führe alle Tests aus und stelle sicher, dass sie durchlaufen.
 Man kann jetzt Daten in der Liste selektieren.
 Jetzt sollen diese Daten auch mit einem neuen bzw. weiteren Hashtag verknüpft werden. 
 Dazu soll es neben dem Export-Knopf einen Knopf Hashtag zuweisen geben, der dann den Hashtag auswählen lässt und dann diesen den selektierten Kontakten zuordnet.
+
+## Hashtags von allen selektierten Kontakten entfernen
+
+Man kann jetzt Daten in der Liste selektieren. Jetzt soll bei diesen Kontakten das selektierte Hashtag entfernt werden.Dazu soll es neben dem Hashtag zuweisen-Knopf einen Knopf Hashtag entfernen geben, der dann den Hashtag auswählen lässt und dann diesen bei den selektierten Kontakten entfernt.
