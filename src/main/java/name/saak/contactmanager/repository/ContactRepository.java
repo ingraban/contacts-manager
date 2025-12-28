@@ -15,10 +15,11 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     /**
      * Sucht Kontakte anhand eines Suchbegriffs mit eager loading der Hashtags.
      * Durchsucht alle Felder mit SQL LIKE (case-insensitive).
+     * WICHTIG: Lädt ALLE Hashtags (auch gesperrte), Filterung erfolgt in der View.
      */
     @Query("SELECT DISTINCT c FROM Contact c " +
-           "LEFT JOIN FETCH c.hashtags h " +
-           "WHERE (h IS NULL OR h.gesperrt = false) AND (" +
+           "LEFT JOIN FETCH c.hashtags " +
+           "WHERE " +
            "LOWER(c.vorname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.nachname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.strasse) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -29,15 +30,15 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
            "LOWER(COALESCE(c.telefon2, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(COALESCE(c.email, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(COALESCE(c.firma, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(COALESCE(c.bemerkung, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+           "LOWER(COALESCE(c.bemerkung, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<Contact> searchContacts(@Param("searchTerm") String searchTerm);
 
     /**
      * Findet alle Kontakte sortiert nach Nachname, dann Vorname mit eager loading der Hashtags.
+     * WICHTIG: Lädt ALLE Hashtags (auch gesperrte), Filterung erfolgt in der View.
      */
     @Query("SELECT DISTINCT c FROM Contact c " +
-           "LEFT JOIN FETCH c.hashtags h " +
-           "WHERE h IS NULL OR h.gesperrt = false " +
+           "LEFT JOIN FETCH c.hashtags " +
            "ORDER BY c.nachname ASC, c.vorname ASC")
     List<Contact> findAllByOrderByNachnameAscVornameAsc();
 
