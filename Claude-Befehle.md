@@ -333,3 +333,18 @@ Dazu soll es neben dem Export-Knopf einen Knopf Hashtag zuweisen geben, der dann
 ## Hashtags von allen selektierten Kontakten entfernen
 
 Man kann jetzt Daten in der Liste selektieren. Jetzt soll bei diesen Kontakten das selektierte Hashtag entfernt werden.Dazu soll es neben dem Hashtag zuweisen-Knopf einen Knopf Hashtag entfernen geben, der dann den Hashtag auswählen lässt und dann diesen bei den selektierten Kontakten entfernt.
+
+## Datenbank H2 verwenden
+
+Wir möchten die H2 Datenbank auch für die Produktion verwenden, weil wir nur sehr kleine Datenmengen verwalten.
+
+### DEV Umgebung
+
+- Für die Entwicklung soll die Datenbank im Speicher laufen.
+- Die H2-Console soll zur Verfügung stehen.
+
+### PROD-Umgebung
+
+- Die Datenbank wird verschlüsselt auf der Festplatte gespeichert.
+- Um 22:00 Uhr wird die Datenbank in ein anderes Verzeichnis gesichert.
+

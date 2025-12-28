@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  thymeleaf:
+    cache: true  # Production: Caching aktiviert für bessere Performance
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false  # Production: SQL-Logging deaktiviert
+    properties:
+      hibernate:
+        format_sql: false
+    open-in-view: false
+
+  datasource:
+    # H2 File-based Database mit AES-Verschlüsselung
+    # Format: jdbc:h2:file:<pfad>;CIPHER=AES
+    url: jdbc:h2:file:./data/contactdb;CIPHER=AES
+    driverClassName: org.h2.Driver
+    username: sa
+    # Password Format: <db-password> <encryption-password>
+    # Beispiel: "myDbPass myEncryptionKey"
+    # WICHTIG: Bitte ändern Sie beide Passwörter für Production!
+    password: changeme change-encryption-key
+
+  h2:
+    console:
+      enabled: false  # Production: H2 Console aus Sicherheitsgründen deaktiviert
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    name.saak.contactmanager: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN
