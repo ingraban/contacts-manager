@@ -348,3 +348,16 @@ Wir möchten die H2 Datenbank auch für die Produktion verwenden, weil wir nur s
 - Die Datenbank wird verschlüsselt auf der Festplatte gespeichert.
 - Um 22:00 Uhr wird die Datenbank in ein anderes Verzeichnis gesichert.
 
+## Sortierfunktion
+
+Es soll möglich sein, die Kontakte in der Liste sortiert nach unterschiedlichen Feldern anzuzeigen. Folgende Felder sollen ausgewählt werden können.
+
+- Vorname
+- Nachname
+- Firma
+- Adresse (Ort und Straße)
+
+Füge dazu einen weiteren Button in die Liste (neuer Kontakt, Export, Hashtag hinzufügen, Hashtag entfernen) an den Anfang mit Sortieren ein. 
+
+- Wenn man bei einer sortierten Liste nur auf den Knopf drückt (nicht das Drop-Down auswählt), soll die Sortierung umgekehrt werden.
+- Wenn man bei einer umgekehrt sortierten Liste auf den Knopf drückt (nicht das Drop-Down auswählt), soll die Sortierung aufgehoben werden.

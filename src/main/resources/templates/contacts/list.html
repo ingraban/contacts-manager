@@ -108,6 +108,37 @@
 
             <!-- Action Buttons -->
             <div class="action-section" style="margin-bottom: 1rem;">
+                <!-- Sort Button with Dropdown -->
+                <div class="btn-group">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            id="sortBtn"
+                            th:title="${sortField != null ? 'Sortierung ändern' : 'Sortieren nach...'}"
+                            th:data-current-field="${sortField}"
+                            th:data-current-dir="${sortDir}">
+                        <i class="bi bi-sort-down" th:if="${sortDir == null or sortDir == 'asc'}"></i>
+                        <i class="bi bi-sort-up" th:if="${sortDir == 'desc'}"></i>
+                        <span th:if="${sortField == null}">Sortieren</span>
+                        <span th:if="${sortField == 'vorname'}">Vorname</span>
+                        <span th:if="${sortField == 'nachname'}">Nachname</span>
+                        <span th:if="${sortField == 'firma'}">Firma</span>
+                        <span th:if="${sortField == 'adresse'}">Adresse</span>
+                    </button>
+                    <ul class="dropdown-menu" id="sortDropdownMenu" style="display: none;">
+                        <li><a class="dropdown-item" href="#" data-sort-field="vorname">Vorname</a></li>
+                        <li><a class="dropdown-item" href="#" data-sort-field="nachname">Nachname</a></li>
+                        <li><a class="dropdown-item" href="#" data-sort-field="firma">Firma</a></li>
+                        <li><a class="dropdown-item" href="#" data-sort-field="adresse">Adresse</a></li>
+                    </ul>
+                    <button type="button"
+                            class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                            id="sortDropdownBtn"
+                            aria-expanded="false"
+                            title="Sortierfeld auswählen">
+                        <span class="visually-hidden">Sortierfeld auswählen</span>
+                    </button>
+                </div>
+
                 <a th:href="@{/contacts/new}" class="btn btn-primary" title="Neuer Kontakt erstellen">
                     <i class="bi bi-plus-lg"></i>
                     Neuer Kontakt

@@ -35,23 +35,32 @@ public class ContactController {
     }
 
     /**
-     * Zeigt die Kontaktliste mit optionaler Suche.
+     * Zeigt die Kontaktliste mit optionaler Suche und Sortierung.
      */
     @GetMapping
     public String listContacts(
             @RequestParam(name = "search", required = false) String searchTerm,
+            @RequestParam(name = "sort", required = false) String sortField,
+            @RequestParam(name = "dir", required = false) String sortDir,
             Model model) {
         List<Contact> contacts;
 
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            contacts = contactService.searchContacts(searchTerm);
+            contacts = contactService.searchContacts(searchTerm, sortField, sortDir);
             model.addAttribute("searchTerm", searchTerm);
         } else {
-            contacts = contactService.findAllContacts();
+            contacts = contactService.findAllContacts(sortField, sortDir);
         }
 
         model.addAttribute("contacts", contacts);
         model.addAttribute("availableHashtags", hashtagService.findActiveHashtags());
+
+        // Sort-Parameter für UI-State
+        if (sortField != null && !sortField.isEmpty()) {
+            model.addAttribute("sortField", sortField);
+            model.addAttribute("sortDir", sortDir != null ? sortDir : "asc");
+        }
+
         return "contacts/list";
     }
 

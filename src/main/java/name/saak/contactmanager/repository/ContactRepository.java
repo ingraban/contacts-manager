@@ -1,6 +1,7 @@
 package name.saak.contactmanager.repository;
 
 import name.saak.contactmanager.domain.Contact;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -93,4 +94,37 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
            "LEFT JOIN FETCH c.hashtags " +
            "WHERE c.id = :id")
     Optional<Contact> findByIdWithActiveHashtags(@Param("id") Long id);
+
+    /**
+     * Findet alle Kontakt-IDs mit dynamischer Sortierung (ohne JOIN für korrekte Sortierung).
+     */
+    @Query("SELECT c.id FROM Contact c")
+    List<Long> findAllContactIds(Sort sort);
+
+    /**
+     * Findet Kontakte anhand von IDs mit eager loading.
+     * WICHTIG: Lädt ALLE Hashtags (auch gesperrte), Filterung erfolgt in der View.
+     */
+    @Query("SELECT DISTINCT c FROM Contact c " +
+           "LEFT JOIN FETCH c.hashtags " +
+           "WHERE c.id IN :ids")
+    List<Contact> findByIdsWithHashtags(@Param("ids") List<Long> ids);
+
+    /**
+     * Sucht Kontakt-IDs mit dynamischer Sortierung (ohne JOIN für korrekte Sortierung).
+     */
+    @Query("SELECT c.id FROM Contact c " +
+           "WHERE " +
+           "LOWER(c.vorname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.nachname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.strasse) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.postleitzahl) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.ort) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.anrede, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.telefon1, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.telefon2, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.email, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.firma, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(COALESCE(c.bemerkung, '')) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    List<Long> searchContactIds(@Param("searchTerm") String searchTerm, Sort sort);
 }

@@ -4,12 +4,15 @@ import name.saak.contactmanager.domain.Contact;
 import name.saak.contactmanager.domain.Hashtag;
 import name.saak.contactmanager.repository.ContactRepository;
 import name.saak.contactmanager.repository.HashtagRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +35,32 @@ public class ContactService {
     @Transactional(readOnly = true)
     public List<Contact> findAllContacts() {
         return contactRepository.findAllByOrderByNachnameAscVornameAsc();
+    }
+
+    /**
+     * Gibt alle Kontakte mit dynamischer Sortierung zurück.
+     *
+     * @param sortField Sortierfeld (vorname, nachname, firma, adresse) oder null für Default
+     * @param sortDir Sortierrichtung (asc, desc) oder null für Default
+     */
+    @Transactional(readOnly = true)
+    public List<Contact> findAllContacts(String sortField, String sortDir) {
+        if (sortField == null || sortField.isEmpty()) {
+            return findAllContacts();
+        }
+
+        Sort sort = createSort(sortField, sortDir);
+
+        // Two-step approach: first get IDs with correct sort, then fetch entities
+        List<Long> ids = contactRepository.findAllContactIds(sort);
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+
+        List<Contact> contacts = contactRepository.findByIdsWithHashtags(ids);
+
+        // Maintain sort order (IN clause doesn't preserve order)
+        return sortContactsByIds(contacts, ids);
     }
 
     /**
@@ -61,6 +90,45 @@ public class ContactService {
 
         // Normale Volltextsuche
         return contactRepository.searchContacts(trimmedSearchTerm);
+    }
+
+    /**
+     * Sucht Kontakte mit Volltextsuche und dynamischer Sortierung.
+     *
+     * @param searchTerm Suchbegriff
+     * @param sortField Sortierfeld oder null für Default
+     * @param sortDir Sortierrichtung oder null für Default
+     */
+    @Transactional(readOnly = true)
+    public List<Contact> searchContacts(String searchTerm, String sortField, String sortDir) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return findAllContacts(sortField, sortDir);
+        }
+
+        String trimmedSearchTerm = searchTerm.trim();
+
+        // Hashtag-Suche unterstützt aktuell keine benutzerdefinierte Sortierung
+        if (trimmedSearchTerm.startsWith("#")) {
+            return searchByHashtags(trimmedSearchTerm);
+        }
+
+        // Normale Volltextsuche mit Sortierung
+        if (sortField == null || sortField.isEmpty()) {
+            return contactRepository.searchContacts(trimmedSearchTerm);
+        }
+
+        Sort sort = createSort(sortField, sortDir);
+
+        // Two-step approach: first get IDs with correct sort, then fetch entities
+        List<Long> ids = contactRepository.searchContactIds(trimmedSearchTerm, sort);
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+
+        List<Contact> contacts = contactRepository.findByIdsWithHashtags(ids);
+
+        // Maintain sort order (IN clause doesn't preserve order)
+        return sortContactsByIds(contacts, ids);
     }
 
     /**
@@ -277,6 +345,47 @@ public class ContactService {
                 }
             }
         }
+    }
+
+    /**
+     * Erstellt ein Sort-Objekt basierend auf Feld und Richtung.
+     *
+     * @param sortField Das Sortierfeld (vorname, nachname, firma, adresse)
+     * @param sortDir Die Sortierrichtung (asc, desc)
+     * @return Sort-Objekt für die Datenbank-Query
+     */
+    private Sort createSort(String sortField, String sortDir) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortDir)
+            ? Sort.Direction.DESC
+            : Sort.Direction.ASC;
+
+        return switch (sortField.toLowerCase()) {
+            case "vorname" -> Sort.by(direction, "vorname", "nachname");
+            case "nachname" -> Sort.by(direction, "nachname", "vorname");
+            case "firma" -> Sort.by(direction, "firma", "nachname", "vorname");
+            case "adresse" -> Sort.by(direction, "ort", "strasse", "nachname", "vorname");
+            default -> Sort.by(Sort.Direction.ASC, "nachname", "vorname");
+        };
+    }
+
+    /**
+     * Sortiert eine Liste von Kontakten nach einer gegebenen ID-Reihenfolge.
+     * Erforderlich, weil SQL IN clause die Sortierung nicht bewahrt.
+     *
+     * @param contacts Liste der zu sortierenden Kontakte
+     * @param ids Liste der IDs in der gewünschten Reihenfolge
+     * @return Sortierte Liste von Kontakten
+     */
+    private List<Contact> sortContactsByIds(List<Contact> contacts, List<Long> ids) {
+        // Create a map for O(1) lookup
+        Map<Long, Contact> contactMap = contacts.stream()
+            .collect(Collectors.toMap(Contact::getId, c -> c));
+
+        // Return contacts in the order of the IDs
+        return ids.stream()
+            .map(contactMap::get)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
     /**

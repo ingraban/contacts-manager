@@ -140,4 +140,77 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Sort-Funktionalität
+    const sortBtn = document.getElementById('sortBtn');
+    const sortDropdownBtn = document.getElementById('sortDropdownBtn');
+    const sortDropdownMenu = document.getElementById('sortDropdownMenu');
+
+    if (sortBtn && sortDropdownBtn && sortDropdownMenu) {
+        // Toggle Dropdown
+        sortDropdownBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = sortDropdownMenu.style.display === 'block';
+            sortDropdownMenu.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!sortBtn.contains(e.target) && !sortDropdownBtn.contains(e.target) && !sortDropdownMenu.contains(e.target)) {
+                sortDropdownMenu.style.display = 'none';
+            }
+        });
+
+        // Main sort button click - cycle through: ASC -> DESC -> NONE
+        sortBtn.addEventListener('click', function() {
+            const currentField = this.dataset.currentField;
+            const currentDir = this.dataset.currentDir;
+
+            if (!currentField) {
+                // No sort yet - do nothing, user should use dropdown
+                return;
+            }
+
+            // Build URL with search parameter preserved
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchTerm = urlParams.get('search');
+            let newUrl = '/contacts';
+
+            if (currentDir === 'asc') {
+                // Switch to DESC
+                newUrl += '?sort=' + currentField + '&dir=desc';
+            } else if (currentDir === 'desc') {
+                // Remove sort (go back to default)
+                newUrl = '/contacts';
+            }
+
+            // Preserve search term if present
+            if (searchTerm) {
+                newUrl += (newUrl.includes('?') ? '&' : '?') + 'search=' + encodeURIComponent(searchTerm);
+            }
+
+            window.location.href = newUrl;
+        });
+
+        // Dropdown item clicks - select sort field
+        const dropdownItems = sortDropdownMenu.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const sortField = this.dataset.sortField;
+
+                // Build URL with search parameter preserved
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchTerm = urlParams.get('search');
+                let newUrl = '/contacts?sort=' + sortField + '&dir=asc';
+
+                // Preserve search term if present
+                if (searchTerm) {
+                    newUrl += '&search=' + encodeURIComponent(searchTerm);
+                }
+
+                window.location.href = newUrl;
+            });
+        });
+    }
 });
