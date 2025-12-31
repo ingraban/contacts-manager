@@ -31,3 +31,6 @@ replay_pid*
 .settings/
 .classpath
 .project
+
+# Visual Studio Code
+.vscode/settings.json

@@ -173,6 +173,17 @@
 							<jvmFlag>-Dfile.encoding=UTF-8</jvmFlag>
 						</jvmFlags>
 					</container>
+					<!-- Volume/Dateipfade mappen -->
+					<volumes>
+						<volume>/data</volume>
+						<volume>/backup</volume>
+					</volumes>
+					<!-- Environment-Variablen -->
+					<environment>
+						<SPRING_DATASOURCE_URL>jdbc:h2:file:/data/contactdb;CIPHER=AES</SPRING_DATASOURCE_URL>
+						<SPRING_DATASOURCE_PASSWORD>sapwd encryptionpwd</SPRING_DATASOURCE_PASSWORD>
+						<SPRING_PROFILES_ACTIVE>prod</SPRING_PROFILES_ACTIVE>
+					</environment>
 					<allowInsecureRegistries>false</allowInsecureRegistries>
 				</configuration>
 			</plugin>
