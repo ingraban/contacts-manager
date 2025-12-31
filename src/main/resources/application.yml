@@ -40,3 +40,10 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
+
+# Application-specific Configuration
+app:
+  backup:
+    enabled: true
+    directory: ./backup
+    cron: "0 0 2 * * *"  # Täglich um 2:00 Uhr

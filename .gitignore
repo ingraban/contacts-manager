@@ -34,3 +34,13 @@ replay_pid*
 
 # Visual Studio Code
 .vscode/settings.json
+
+# Backup directories
+backup/
+test-backup/
+/data/backup/
+
+# H2 Database files (production)
+/data/*.db
+/data/*.mv.db
+/data/*.trace.db

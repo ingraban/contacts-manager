@@ -48,3 +48,10 @@ logging:
     name.saak.contactmanager: INFO
     org.springframework.web: WARN
     org.hibernate: WARN
+
+# Application-specific Configuration
+app:
+  backup:
+    enabled: true
+    directory: /data/backup
+    cron: "0 0 2 * * *"  # Täglich um 2:00 Uhr
