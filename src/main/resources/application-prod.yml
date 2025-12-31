@@ -54,4 +54,4 @@ app:
   backup:
     enabled: true
     directory: /data/backup
-    cron: "0 0 2 * * *"  # Täglich um 2:00 Uhr
+    cron: "0 15 */1 * * *"  # Täglich um 2:00 Uhr
