@@ -53,5 +53,5 @@ logging:
 app:
   backup:
     enabled: true
-    directory: /data/backup
-    cron: "0 15 */1 * * *"  # Täglich um 2:00 Uhr
+    directory: /backup
+    cron: "0 15 */1 * * *"  # Jede Stunde um :15 
