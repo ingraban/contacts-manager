@@ -44,4 +44,4 @@ test-backup/
 /data/*.db
 /data/*.mv.db
 /data/*.trace.db
-src/main/resources/application.local.yml
+src/main/resources/application-local.yml
