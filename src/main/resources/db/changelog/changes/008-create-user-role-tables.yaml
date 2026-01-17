@@ -1,0 +1,126 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-user-role-tables
+      author: saak
+      changes:
+        # Role table
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+
+        # User table
+        - createTable:
+            tableName: app_user
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: gitea_user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: username
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: display_name
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_login
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        # User-Role join table
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+        # Primary key for join table
+        - addPrimaryKey:
+            tableName: user_role
+            columnNames: user_id, role_id
+            constraintName: pk_user_role
+
+        # Foreign keys
+        - addForeignKeyConstraint:
+            baseTableName: user_role
+            baseColumnNames: user_id
+            constraintName: fk_user_role_user
+            referencedTableName: app_user
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: user_role
+            baseColumnNames: role_id
+            constraintName: fk_user_role_role
+            referencedTableName: role
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        # Indexes
+        - createIndex:
+            tableName: app_user
+            indexName: idx_user_gitea_id
+            columns:
+              - column:
+                  name: gitea_user_id
+
+        - createIndex:
+            tableName: app_user
+            indexName: idx_user_username
+            columns:
+              - column:
+                  name: username

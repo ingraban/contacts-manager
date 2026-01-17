@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-extend-user-table-auth-source
+      author: saak
+      changes:
+        # gitea_user_id nullable machen (für lokale Benutzer)
+        - dropNotNullConstraint:
+            tableName: app_user
+            columnName: gitea_user_id
+            columnDataType: bigint
+
+        # Neue Spalten hinzufügen
+        - addColumn:
+            tableName: app_user
+            columns:
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: auth_source
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  defaultValue: GITEA
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: true
+
+        # Index für auth_source
+        - createIndex:
+            tableName: app_user
+            indexName: idx_user_auth_source
+            columns:
+              - column:
+                  name: auth_source
+
+        # Index für enabled
+        - createIndex:
+            tableName: app_user
+            indexName: idx_user_enabled
+            columns:
+              - column:
+                  name: enabled

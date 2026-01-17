@@ -45,6 +45,18 @@
 	    	<artifactId>spring-boot-starter-security</artifactId>
 	  	</dependency>
 
+		<!-- OAuth2 Client Support -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+
+		<!-- Thymeleaf Spring Security Integration -->
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
+
 	  	<!-- JPA / Hibernate -->
 	  	<dependency>
 	  		<groupId>org.springframework.boot</groupId>

@@ -45,3 +45,4 @@ test-backup/
 /data/*.mv.db
 /data/*.trace.db
 src/main/resources/application-local.yml
+.vscode/launch.json

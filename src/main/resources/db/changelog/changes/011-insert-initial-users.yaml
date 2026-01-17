@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-insert-initial-users
+      author: saak
+      changes:
+        # Admin-Benutzer anlegen
+        # Passwort: geheim (BCrypt-Hash)
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  value: $2a$10$TzLRacfxN4VjK2ln9vVhFOCH7sH8XSfc.tqbXjoA3.4S1kgoJ6vFe
+              - column:
+                  name: auth_source
+                  value: LOCAL
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: display_name
+                  value: Administrator
+              - column:
+                  name: created_at
+                  valueDate: CURRENT_TIMESTAMP
+              - column:
+                  name: last_login
+                  valueDate: CURRENT_TIMESTAMP
+
+        # Contact-Benutzer anlegen
+        # Passwort: geheim (BCrypt-Hash)
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: username
+                  value: contact
+              - column:
+                  name: password
+                  value: $2a$10$TzLRacfxN4VjK2ln9vVhFOCH7sH8XSfc.tqbXjoA3.4S1kgoJ6vFe
+              - column:
+                  name: auth_source
+                  value: LOCAL
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: display_name
+                  value: Contact User
+              - column:
+                  name: created_at
+                  valueDate: CURRENT_TIMESTAMP
+              - column:
+                  name: last_login
+                  valueDate: CURRENT_TIMESTAMP
+
+        # Admin-Rolle dem admin-Benutzer zuweisen
+        - sql:
+            sql: |
+              INSERT INTO user_role (user_id, role_id)
+              SELECT u.id, r.id
+              FROM app_user u, role r
+              WHERE u.username = 'admin' AND r.name = 'ADMIN'
+
+        # CONTACT-Rolle dem contact-Benutzer zuweisen
+        - sql:
+            sql: |
+              INSERT INTO user_role (user_id, role_id)
+              SELECT u.id, r.id
+              FROM app_user u, role r
+              WHERE u.username = 'contact' AND r.name = 'CONTACT'

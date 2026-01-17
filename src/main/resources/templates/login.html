@@ -3,22 +3,65 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>Login - EML Viewer</title>
+  <title>Login - Sommerhausen Office Suite</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <style>
+    .oauth-login {
+      margin: 2rem 0;
+      padding-top: 2rem;
+      border-top: 1px solid #e1e8ed;
+    }
+
+    .btn-large {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      box-sizing: border-box;
+      border-radius: 8px;
+    }
+
+    .login-info {
+      margin-top: 1rem;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .login-divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      color: #999;
+      font-size: 14px;
+    }
+  </style>
+  <script>
+    // Entferne URL-Parameter nach Anzeige, damit beim Neuladen keine alten Meldungen erscheinen
+    if (window.location.search.includes('logout') || window.location.search.includes('error')) {
+      // Ersetze URL ohne Parameter, ohne die Seite neu zu laden
+      const url = new URL(window.location);
+      url.search = '';
+      window.history.replaceState({}, document.title, url);
+    }
+  </script>
 </head>
 <body>
   <div class="login-card">
-    <h1>🔐 Login</h1>
+    <h1>Anmeldung</h1>
 
     <div th:if="${param.error}" class="error">
-      Ungültiger Benutzername oder Passwort
+      Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.
     </div>
 
     <div th:if="${param.logout}" class="logout-message">
       Sie wurden erfolgreich abgemeldet
     </div>
 
+    <!-- Lokaler Login -->
     <form th:action="@{/login}" method="post">
       <div>
         <label for="username">Benutzername</label>
@@ -34,6 +77,19 @@
 
       <button type="submit">Anmelden</button>
     </form>
+
+    <div class="login-divider">oder</div>
+
+    <!-- OAuth2 Login -->
+    <div class="oauth-login">
+      <a th:href="@{/oauth2/authorization/gitea}" class="btn btn-primary btn-large">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Mit Gitea anmelden
+      </a>
+      <p class="login-info">
+        Verwenden Sie Ihren Gitea-Account von <strong>projects.sommerhausen.de</strong> zur Anmeldung.
+      </p>
+    </div>
   </div>
 </body>
 </html>

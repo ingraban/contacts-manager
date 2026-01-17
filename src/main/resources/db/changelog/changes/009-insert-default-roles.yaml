@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-insert-default-roles
+      author: saak
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: ADMIN
+              - column:
+                  name: description
+                  value: Administrator mit vollem Zugriff auf alle Funktionen
+
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: USER
+              - column:
+                  name: description
+                  value: Standard-Benutzer mit Lese- und Schreibrechten
+
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: READONLY
+              - column:
+                  name: description
+                  value: Nur Lesezugriff aktuell keine Rechte
+
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: CONTACT
+              - column:
+                  name: description
+                  value: Zugriff nur auf Kontakte, keine Admin-Funktionen

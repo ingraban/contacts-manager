@@ -8,6 +8,7 @@ import name.saak.contactmanager.service.HashtagService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,7 @@ public class ContactController {
     /**
      * Zeigt die Kontaktliste mit optionaler Suche und Sortierung.
      */
+    @PreAuthorize("hasAnyRole('CONTACT')")
     @GetMapping
     public String listContacts(
             @RequestParam(name = "search", required = false) String searchTerm,

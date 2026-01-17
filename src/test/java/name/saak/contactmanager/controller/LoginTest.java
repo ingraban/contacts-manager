@@ -31,19 +31,29 @@ class LoginTest {
 
 	@Test
 	void protectedPagesRedirectToLoginWhenNotAuthenticated() throws Exception {
-		mockMvc.perform(get("/"))
+		mockMvc.perform(get("/contacts"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrlPattern("**/login"));
 	}
 
 	@Test
-	void loginWithAdminAndGeheimSucceeds() throws Exception {
+	void loginWithAdminSucceeds() throws Exception {
 		mockMvc.perform(formLogin("/login")
 						.user("admin")
 						.password("geheim"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/"))
 				.andExpect(authenticated().withUsername("admin"));
+	}
+
+	@Test
+	void loginWithContactSucceeds() throws Exception {
+		mockMvc.perform(formLogin("/login")
+						.user("contact")
+						.password("geheim"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated().withUsername("contact"));
 	}
 
 	@Test

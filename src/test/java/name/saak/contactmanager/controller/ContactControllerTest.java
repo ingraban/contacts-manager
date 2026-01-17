@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
+@WithMockUser(roles = "CONTACT")
 class ContactControllerTest {
 
     @Autowired
@@ -30,7 +32,6 @@ class ContactControllerTest {
     private ContactService contactService;
 
     @Test
-    @WithMockUser
     void shouldDisplayContactListPage() throws Exception {
         mockMvc.perform(get("/contacts"))
             .andExpect(status().isOk())
@@ -39,7 +40,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldDisplaySearchResults() throws Exception {
         // Given: Test data from Liquibase
 
@@ -53,7 +53,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldDisplayCreateContactForm() throws Exception {
         mockMvc.perform(get("/contacts/new"))
             .andExpect(status().isOk())
@@ -63,7 +62,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldCreateNewContact() throws Exception {
         mockMvc.perform(post("/contacts")
                 .with(csrf())
@@ -83,7 +81,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldNotCreateContactWithMissingRequiredFields() throws Exception {
         mockMvc.perform(post("/contacts")
                 .with(csrf())
@@ -95,7 +92,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldNotCreateDuplicateContact() throws Exception {
         // Given: Create first contact
         contactService.createContact(new Contact("Duplicate", "Test", "Str 1", "12345", "City"));
@@ -116,7 +112,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldDisplayEditContactForm() throws Exception {
         // Given: Create contact
         Contact contact = contactService.createContact(
@@ -133,7 +128,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldUpdateContact() throws Exception {
         // Given: Create contact
         Contact contact = contactService.createContact(
@@ -160,7 +154,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldNotUpdateContactWithValidationErrors() throws Exception {
         // Given: Create contact
         Contact contact = contactService.createContact(
@@ -181,7 +174,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldDeleteContact() throws Exception {
         // Given: Create contact
         Contact contact = contactService.createContact(
@@ -200,7 +192,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldHandleDeleteNonExistentContact() throws Exception {
         mockMvc.perform(post("/contacts/{id}/delete", 99999L)
                 .with(csrf()))
@@ -210,6 +201,7 @@ class ContactControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     void shouldRequireAuthenticationForContactPages() throws Exception {
         mockMvc.perform(get("/contacts"))
             .andExpect(status().is3xxRedirection())
@@ -217,7 +209,6 @@ class ContactControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldValidateEmailFormat() throws Exception {
         mockMvc.perform(post("/contacts")
                 .with(csrf())

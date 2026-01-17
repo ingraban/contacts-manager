@@ -1,11 +1,7 @@
 package name.saak.contactmanager.config;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,36 +38,38 @@ class SecurityConfigTest {
 	}
 
 	@Test
-	void loginPageIsAccessibleWithoutAuthentication() throws Exception {
-		mockMvc.perform(get("/login"))
-				.andExpect(status().isOk());
-	}
-
-	@Test
 	void protectedPagesRedirectToLoginWhenNotAuthenticated() throws Exception {
-		mockMvc.perform(get("/"))
+		mockMvc.perform(get("/contacts"))
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrlPattern("**/login"));
 	}
 
 	@Test
-	void authenticatedUserCanAccessProtectedPages() throws Exception {
-		mockMvc.perform(formLogin("/login")
-						.user("admin")
-						.password("geheim"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/"))
-				.andExpect(authenticated().withUsername("admin"));
+	@WithMockUser(roles = "ADMIN")
+	void adminCanAccessAdminPages() throws Exception {
+		mockMvc.perform(get("/admin/users"))
+				.andExpect(status().isOk());
 	}
 
 	@Test
-	void loginWithInvalidCredentialsFails() throws Exception {
-		mockMvc.perform(formLogin("/login")
-						.user("admin")
-						.password("wrong"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/login?error"))
-				.andExpect(unauthenticated());
+	@WithMockUser(roles = "USER")
+	void userCannotAccessAdminPages() throws Exception {
+		mockMvc.perform(get("/admin/users"))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
+	@WithMockUser(roles = "CONTACT")
+	void contactCanAccessContacts() throws Exception {
+		mockMvc.perform(get("/contacts"))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = "CONTACT")
+	void contactCannotAccessAdminPages() throws Exception {
+		mockMvc.perform(get("/admin/users"))
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -81,7 +79,7 @@ class SecurityConfigTest {
 				.andExpect(status().isOk())
 				.andExpect(header().exists("Content-Security-Policy"))
 				.andExpect(header().string("Content-Security-Policy",
-					"default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; script-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none';"))
+					"default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; script-src 'self'; connect-src 'self' https://projects.sommerhausen.de; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none';"))
 				.andExpect(header().exists("X-Content-Type-Options"))
 				.andExpect(header().string("X-Content-Type-Options", "nosniff"))
 				.andExpect(header().exists("X-Frame-Options"))
@@ -111,6 +109,16 @@ class SecurityConfigTest {
 		assertThat(userDetails.getUsername()).isEqualTo("admin");
 		assertThat(userDetails.getAuthorities()).hasSize(1);
 		assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_ADMIN");
+	}
+
+	@Test
+	void userDetailsServiceContainsContactUser() {
+		var userDetails = userDetailsService.loadUserByUsername("contact");
+
+		assertThat(userDetails).isNotNull();
+		assertThat(userDetails.getUsername()).isEqualTo("contact");
+		assertThat(userDetails.getAuthorities()).hasSize(1);
+		assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_CONTACT");
 	}
 
 	@Test

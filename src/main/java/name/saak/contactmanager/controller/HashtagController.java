@@ -3,6 +3,7 @@ package name.saak.contactmanager.controller;
 import jakarta.validation.Valid;
 import name.saak.contactmanager.domain.Hashtag;
 import name.saak.contactmanager.service.HashtagService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/hashtags")
+@PreAuthorize("hasAnyRole('CONTACT')")
 public class HashtagController {
 
     private final HashtagService hashtagService;
