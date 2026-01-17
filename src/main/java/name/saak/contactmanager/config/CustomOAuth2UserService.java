@@ -27,7 +27,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oauth2User = super.loadUser(userRequest);
 
         // Extrahiere Gitea-Benutzerdaten
-        Long giteaUserId = oauth2User.getAttribute("id");
+        // Gitea gibt ID als Integer zurück, muss zu Long konvertiert werden
+        Object idObj = oauth2User.getAttribute("id");
+        Long giteaUserId = idObj instanceof Number ? ((Number) idObj).longValue() : null;
         String username = oauth2User.getAttribute("login");
         String email = oauth2User.getAttribute("email");
         String displayName = oauth2User.getAttribute("full_name");
