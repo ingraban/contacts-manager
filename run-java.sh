@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # JAR Datei
-JAR_FILE="target/app.jar"
+JAR_FILE="target/fat-app.jar"
 
 # Prüfe ob JAR existiert
 if [ ! -f "$JAR_FILE" ]; then
