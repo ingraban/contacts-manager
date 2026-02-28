@@ -84,6 +84,9 @@ public class Contact {
     )
     private Set<Hashtag> hashtags = new HashSet<>();
 
+    @OneToOne(mappedBy = "contact", fetch = FetchType.LAZY)
+    private Employee employee;
+
     // Lifecycle callbacks
     @PrePersist
     protected void onCreate() {
@@ -219,6 +222,21 @@ public class Contact {
 
     public void setHashtags(Set<Hashtag> hashtags) {
         this.hashtags = hashtags;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    /**
+     * Prüft ob dieser Contact ein Employee ist.
+     */
+    public boolean isEmployee() {
+        return employee != null;
     }
 
     // Helper methods for bidirectional relationship management

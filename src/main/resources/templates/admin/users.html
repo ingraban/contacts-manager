@@ -8,10 +8,9 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <th:block th:replace="~{fragments/header :: header('admin')}"></th:block>
-
-    <main class="container">
-        <h1>Benutzerverwaltung</h1>
+    <th:block th:replace="~{fragments/admin-layout :: admin-layout('users', ~{::content})}">
+        <th:block th:fragment="content">
+            <h1>Benutzerverwaltung</h1>
 
         <!-- Success/Error Messages -->
         <div th:if="${successMessage}" class="alert alert-success">
@@ -89,6 +88,7 @@
                 </tr>
             </tbody>
         </table>
-    </main>
+        </th:block>
+    </th:block>
 </body>
 </html>

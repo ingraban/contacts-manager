@@ -1,6 +1,7 @@
 package name.saak.contactmanager.controller;
 
 import name.saak.contactmanager.domain.User;
+import name.saak.contactmanager.service.DatabaseBackupService;
 import name.saak.contactmanager.service.RoleService;
 import name.saak.contactmanager.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +19,21 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final DatabaseBackupService backupService;
 
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService,
+                          DatabaseBackupService backupService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.backupService = backupService;
+    }
+
+    /**
+     * Zeigt die Admin-Startseite.
+     */
+    @GetMapping("")
+    public String adminIndex() {
+        return "admin/index";
     }
 
     /**
@@ -122,5 +134,56 @@ public class AdminController {
                                   RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/admin/users";
+    }
+
+    // ==================== Datenbank-Verwaltung ====================
+
+    /**
+     * Zeigt die Datenbank-Verwaltungsseite.
+     */
+    @GetMapping("/database")
+    public String showDatabasePage(Model model) {
+        model.addAttribute("lastBackup", backupService.getLastBackupInfo().orElse(null));
+        model.addAttribute("backups", backupService.listBackups());
+        return "admin/database";
+    }
+
+    /**
+     * Erstellt ein neues Datenbank-Backup.
+     */
+    @PostMapping("/database/backup")
+    public String createBackup(RedirectAttributes redirectAttributes) {
+        try {
+            var backupFile = backupService.createBackup();
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Backup erfolgreich erstellt: " + backupFile.getFileName());
+        } catch (DatabaseBackupService.BackupException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                "Fehler beim Erstellen des Backups: " + e.getMessage());
+        }
+        return "redirect:/admin/database";
+    }
+
+    /**
+     * Stellt die Datenbank aus einem Backup wieder her.
+     */
+    @PostMapping("/database/restore")
+    public String restoreBackup(@RequestParam String filename,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            var backupInfo = backupService.listBackups().stream()
+                .filter(b -> b.filename().equals(filename))
+                .findFirst()
+                .orElseThrow(() -> new DatabaseBackupService.BackupException(
+                    "Backup nicht gefunden: " + filename));
+
+            backupService.restoreBackup(backupInfo.path());
+            redirectAttributes.addFlashAttribute("successMessage",
+                "Datenbank erfolgreich wiederhergestellt aus: " + filename);
+        } catch (DatabaseBackupService.BackupException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                "Fehler beim Wiederherstellen: " + e.getMessage());
+        }
+        return "redirect:/admin/database";
     }
 }

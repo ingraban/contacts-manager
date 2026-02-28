@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Styles werden in den Templates geladen, nicht hier -->
+</head>
+<body>
+    <!-- Admin Layout Fragment -->
+    <div th:fragment="admin-layout(activeMenu, content)">
+        <th:block th:replace="~{fragments/header :: header('admin')}"></th:block>
+
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <h2>Administration</h2>
+                <nav>
+                    <a th:href="@{/admin/users}"
+                       th:classappend="${activeMenu == 'users'} ? 'active' : ''">
+                        <i class="bi bi-people"></i>
+                        <span>Benutzerverwaltung</span>
+                    </a>
+                    <a th:href="@{/admin/database}"
+                       th:classappend="${activeMenu == 'database'} ? 'active' : ''">
+                        <i class="bi bi-database"></i>
+                        <span>Datenbank</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content -->
+            <main class="admin-content">
+                <div class="admin-content-inner">
+                    <th:block th:replace="${content}"></th:block>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <style>
+        .admin-content-inner {
+            max-width: 800px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 1.5rem;
+            background: #fff;
+        }
         .checkbox-group {
             display: flex;
             flex-direction: column;
@@ -38,10 +47,9 @@
     </style>
 </head>
 <body>
-    <th:block th:replace="~{fragments/header :: header('admin')}"></th:block>
-
-    <main class="container">
-        <h1>Benutzer bearbeiten</h1>
+    <th:block th:replace="~{fragments/admin-layout :: admin-layout('users', ~{::content})}">
+        <th:block th:fragment="content">
+            <h1>Benutzer bearbeiten</h1>
 
         <!-- Error Messages -->
         <div th:if="${errorMessage}" class="alert alert-error">
@@ -119,6 +127,7 @@
                 <a th:href="@{/admin/users}" class="btn btn-secondary">Abbrechen</a>
             </div>
         </form>
-    </main>
+        </th:block>
+    </th:block>
 </body>
 </html>

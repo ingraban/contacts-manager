@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Sommerhausen Office Suite</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <th:block th:replace="~{fragments/admin-layout :: admin-layout('', ~{::content})}">
+        <th:block th:fragment="content">
+            <h1>Administration</h1>
+            <p>Willkommen im Administrationsbereich.</p>
+            <p>Wählen Sie einen Bereich aus dem Menü auf der linken Seite.</p>
+
+            <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <a th:href="@{/admin/users}" style="text-decoration: none; color: inherit;">
+                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; transition: box-shadow 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                            <i class="bi bi-people" style="font-size: 2rem; color: #1976d2;"></i>
+                            <h3 style="margin: 0;">Benutzerverwaltung</h3>
+                        </div>
+                        <p style="color: #666; margin: 0;">Benutzer verwalten, Rollen zuweisen</p>
+                    </div>
+                </a>
+
+                <a th:href="@{/admin/database}" style="text-decoration: none; color: inherit;">
+                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; transition: box-shadow 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                            <i class="bi bi-database" style="font-size: 2rem; color: #1976d2;"></i>
+                            <h3 style="margin: 0;">Datenbank</h3>
+                        </div>
+                        <p style="color: #666; margin: 0;">Backup und Wiederherstellung</p>
+                    </div>
+                </a>
+            </div>
+        </th:block>
+    </th:block>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package name.saak.contactmanager.config;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -122,21 +123,11 @@ class SecurityConfigTest {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockUser(roles = "ADMIN")
 	void csrfProtectionIsEnabled() throws Exception {
-		// CSRF-Token sollte in Cookies vorhanden sein (CookieCsrfTokenRepository)
-		mockMvc.perform(get("/"))
-				.andExpect(status().isOk())
-				.andExpect(result -> {
-					var cookies = result.getResponse().getCookies();
-					boolean hasCsrfCookie = false;
-					for (var cookie : cookies) {
-						if (cookie.getName().equals("XSRF-TOKEN")) {
-							hasCsrfCookie = true;
-							break;
-						}
-					}
-					assertThat(hasCsrfCookie).isTrue();
-				});
+		// CSRF-Schutz ist aktiviert, wenn POST ohne Token zu 403 führt
+		mockMvc.perform(post("/admin/database/backup")
+						.contentType("application/x-www-form-urlencoded"))
+				.andExpect(status().isForbidden());
 	}
 }
