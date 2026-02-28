@@ -184,9 +184,8 @@ public class UserService {
         }
 
         user.setRoles(newRoles);
-        if (enabled != null) {
-            user.setEnabled(enabled);
-        }
+        // enabled sollte immer gesetzt werden (nicht null sein dank Controller)
+        user.setEnabled(enabled);
         userRepository.save(user);
     }
 

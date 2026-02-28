@@ -84,6 +84,8 @@
 
             <div class="form-group">
                 <label>
+                    <!-- Hidden field für Spring: wenn checkbox nicht gesetzt, wird false verwendet -->
+                    <input type="hidden" name="_enabled" value="on">
                     <input type="checkbox" name="enabled" value="true"
                            th:checked="${user.enabled}"
                            style="width: 18px; height: 18px; margin-right: 8px; vertical-align: middle;">

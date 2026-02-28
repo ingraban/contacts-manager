@@ -72,7 +72,9 @@ public class AdminController {
                 }
             }
 
-            userService.updateUserRoles(id, roleIds, enabled);
+            // Wenn enabled null ist (sollte nicht passieren, aber zur Sicherheit), als false interpretieren
+            Boolean effectiveEnabled = (enabled != null) ? enabled : false;
+            userService.updateUserRoles(id, roleIds, effectiveEnabled);
             redirectAttributes.addFlashAttribute("successMessage",
                 "Benutzerrechte erfolgreich aktualisiert");
             return "redirect:/admin/users";
