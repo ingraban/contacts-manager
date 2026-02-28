@@ -8,15 +8,8 @@
   <!-- Header Fragment -->
   <header class="header" th:fragment="header(activePage)">
     <div class="header-content">
-      <h1>Sommerhausen Office Suite</h1>
+      <h1><a href="/contacts">Sommerhausen Office Suite</a></h1>
       <nav class="nav">
-        <a href="/contacts"
-           th:classappend="${activePage == 'contacts'} ? 'active' : ''"
-           sec:authorize="hasRole('CONTACT')">Kontakte</a>
-        <a href="/hashtags"
-           th:classappend="${activePage == 'hastags'} ? 'active' : ''"
-           sec:authorize="hasRole('CONTACT')">Hashtags</a>
-
         <!-- Benutzer-Dropdown-Menü -->
         <div class="user-menu" th:if="${currentUserDisplayName}">
           <button class="user-menu-button" id="userMenuButton">
