@@ -46,3 +46,7 @@ test-backup/
 /data/*.trace.db
 src/main/resources/application-local.yml
 .vscode/launch.json
+
+# Environment variables
+.env
+.env.local
