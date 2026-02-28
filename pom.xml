@@ -172,7 +172,15 @@
 					<layers>
 						<enabled>true</enabled>
 					</layers>
+				<classifier>exec</classifier>
 				</configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>repackage</goal>
+					</goals>
+				</execution>
+			</executions>
 			</plugin>
 
 			<!-- Setzt Docker-Images direkt ohne Dockerfile/Daemon. Multi-Arch & stabile 
@@ -217,6 +225,28 @@
 					</container>
 					<allowInsecureRegistries>false</allowInsecureRegistries>
 				</configuration>
+			</plugin>
+
+			<!-- Benennt die Fat-JAR von app-exec.jar zu fat-app.jar um mit dem Namen fat-app.jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>rename-fat-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<move file="${project.build.directory}/${project.build.finalName}-exec.jar"
+									  tofile="${project.build.directory}/fat-app.jar"/>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<finalName>app</finalName>

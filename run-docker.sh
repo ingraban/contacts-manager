@@ -18,7 +18,7 @@ CONTAINER_NAME="contact-manager"
 IMAGE_NAME="eclipse-temurin:21-jre"
 
 # JAR Datei
-JAR_FILE="target/contact-manager-0.0.0-SNAPSHOT.jar"
+JAR_FILE="/Users/saak/git/Privat/contacts-manager/target/app.jar"
 
 # Lade .env Datei falls vorhanden
 if [ -f .env ]; then
@@ -46,10 +46,10 @@ BASE_URL="${BASE_URL:-http://localhost:8080}"
 
 # Datenbank Passwort (Format: <db-password> <encryption-password>)
 # WICHTIG: Für Production ändern!
-DB_PASSWORD="${DB_PASSWORD:-changeme change-encryption-key}"
+#DB_PASSWORD="${DB_PASSWORD:-changeme change-encryption-key}"
 
 # Spring Profile (prod für Production)
-SPRING_PROFILE="${SPRING_PROFILE:-prod}"
+#SPRING_PROFILE="${SPRING_PROFILE:-prod}"
 
 # ==============================================
 # VOLUMES FÜR PERSISTENTE DATEN
