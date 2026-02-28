@@ -213,4 +213,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Delete Contact Confirmation
+    const deleteContactForms = document.querySelectorAll('.delete-contact-form');
+    deleteContactForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Möchten Sie diesen Kontakt wirklich löschen?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Lock Hashtag Confirmation
+    const lockHashtagForms = document.querySelectorAll('.lock-hashtag-form');
+    lockHashtagForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Möchten Sie dieses Hashtag wirklich sperren? Es wird dann in Auswahlfeldern nicht mehr angezeigt.')) {
+                e.preventDefault();
+            }
+        });
+    });
 });

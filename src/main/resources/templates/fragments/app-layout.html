@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <!-- App Layout Fragment mit Sidebar -->
+    <div th:fragment="app-layout(activeMenu, content)">
+        <th:block th:replace="~{fragments/header :: header(${activeMenu})}"></th:block>
+
+        <div class="admin-container">
+            <!-- Sidebar Navigation -->
+            <aside class="admin-sidebar">
+                <h2>Datenmenu</h2>
+                <nav>
+                    <a th:href="@{/contacts}"
+                       th:classappend="${activeMenu == 'contacts'} ? 'active' : ''"
+                       sec:authorize="hasRole('CONTACT')">
+                        <i class="bi bi-people"></i>
+                        <span>Kontakte</span>
+                    </a>
+                    <a th:href="@{/employees}"
+                       th:classappend="${activeMenu == 'employees'} ? 'active' : ''"
+                       sec:authorize="hasRole('CONTACT')">
+                        <i class="bi bi-person-badge"></i>
+                        <span>Mitarbeiter</span>
+                    </a>
+                    <a th:href="@{/departments}"
+                       th:classappend="${activeMenu == 'departments'} ? 'active' : ''"
+                       sec:authorize="hasRole('CONTACT')">
+                        <i class="bi bi-building"></i>
+                        <span>Abteilungen</span>
+                    </a>
+
+                    <!-- Divider -->
+                    <div style="height: 1px; background: #e0e0e0; margin: 1rem 0;"></div>
+
+                    <!-- Konfiguration Bereich -->
+                    <div style="padding: 0 1.5rem; margin: 1rem 0 0.5rem 0; color: #666; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Konfiguration
+                    </div>
+                    <a th:href="@{/hashtags}"
+                       th:classappend="${activeMenu == 'hashtags'} ? 'active' : ''"
+                       sec:authorize="hasRole('CONTACT')">
+                        <i class="bi bi-hash"></i>
+                        <span>Hashtags</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content -->
+            <main class="admin-content">
+                <div class="admin-content-inner">
+                    <th:block th:replace="${content}"></th:block>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

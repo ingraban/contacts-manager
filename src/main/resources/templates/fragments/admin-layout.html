@@ -12,7 +12,7 @@
         <th:block th:replace="~{fragments/header :: header('admin')}"></th:block>
 
         <div class="admin-container">
-            <!-- Sidebar -->
+            <!-- Admin Sidebar -->
             <aside class="admin-sidebar">
                 <h2>Administration</h2>
                 <nav>
@@ -25,6 +25,15 @@
                        th:classappend="${activeMenu == 'database'} ? 'active' : ''">
                         <i class="bi bi-database"></i>
                         <span>Datenbank</span>
+                    </a>
+
+                    <!-- Divider -->
+                    <div style="height: 1px; background: #e0e0e0; margin: 1rem 0;"></div>
+
+                    <!-- Zurück zur Hauptansicht -->
+                    <a th:href="@{/contacts}">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Zurück zu Kontakte</span>
                     </a>
                 </nav>
             </aside>
