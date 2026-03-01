@@ -9,7 +9,7 @@
     <script th:src="@{/js/database-admin.js}" defer></script>
 </head>
 <body>
-    <th:block th:replace="~{fragments/admin-layout :: admin-layout('database', ~{::content})}">
+    <th:block th:replace="~{fragments/app-layout :: app-layout('database', ~{::content})}">
         <th:block th:fragment="content">
             <h1>Datenbank-Verwaltung</h1>
 

@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <th:block th:replace="~{fragments/admin-layout :: admin-layout('users', ~{::content})}">
+    <th:block th:replace="~{fragments/app-layout :: app-layout('users', ~{::content})}">
         <th:block th:fragment="content">
             <h1>Benutzerverwaltung</h1>
 

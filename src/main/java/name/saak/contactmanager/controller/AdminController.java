@@ -29,11 +29,11 @@ public class AdminController {
     }
 
     /**
-     * Zeigt die Admin-Startseite.
+     * Leitet zur Benutzerverwaltung um.
      */
     @GetMapping("")
     public String adminIndex() {
-        return "admin/index";
+        return "redirect:/admin/users";
     }
 
     /**

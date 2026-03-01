@@ -20,7 +20,7 @@
                         <a th:href="@{/contacts}"
                            th:classappend="${activeMenu == 'contacts'} ? 'active' : ''"
                            sec:authorize="hasRole('CONTACT')">
-                            <i class="bi bi-people"></i>
+                            <i class="bi bi-person-vcard"></i>
                             <span>Kontakte</span>
                         </a>
                         <a th:href="@{/employees}"
@@ -53,6 +53,24 @@
                            sec:authorize="hasRole('PERSONAL')">
                             <i class="bi bi-calendar-event"></i>
                             <span>Feiertage</span>
+                        </a>
+                    </nav>
+                </details>
+
+                <!-- Administration -->
+                <details th:attr="open=${activeMenu == 'users' || activeMenu == 'database' ? 'open' : null}"
+                         sec:authorize="hasRole('ADMIN')">
+                    <summary>Administration</summary>
+                    <nav>
+                        <a th:href="@{/admin/users}"
+                           th:classappend="${activeMenu == 'users'} ? 'active' : ''">
+                            <i class="bi bi-people"></i>
+                            <span>Benutzerverwaltung</span>
+                        </a>
+                        <a th:href="@{/admin/database}"
+                           th:classappend="${activeMenu == 'database'} ? 'active' : ''">
+                            <i class="bi bi-database"></i>
+                            <span>Datenbank</span>
                         </a>
                     </nav>
                 </details>
