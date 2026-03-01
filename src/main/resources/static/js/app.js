@@ -253,4 +253,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Delete Holiday Confirmation
+    const deleteHolidayForms = document.querySelectorAll('.delete-holiday-form');
+    deleteHolidayForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Möchten Sie diesen Feiertag wirklich löschen?')) {
+                e.preventDefault();
+            }
+        });
+    });
 });

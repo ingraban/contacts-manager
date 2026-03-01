@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 018-insert-personal-role
+      author: saak
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: PERSONAL
+              - column:
+                  name: description
+                  value: Personalverwaltung - Zugriff auf Mitarbeiter, Abteilungen und Feiertage

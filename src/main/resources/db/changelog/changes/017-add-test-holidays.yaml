@@ -1,0 +1,148 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-add-test-holidays
+      author: saak
+      changes:
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-01-01'
+              - column:
+                  name: name
+                  value: 'Neujahr'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-04-03'
+              - column:
+                  name: name
+                  value: 'Karfreitag'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-04-06'
+              - column:
+                  name: name
+                  value: 'Ostermontag'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-05-01'
+              - column:
+                  name: name
+                  value: 'Tag der Arbeit'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-05-14'
+              - column:
+                  name: name
+                  value: 'Christi Himmelfahrt'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-05-25'
+              - column:
+                  name: name
+                  value: 'Pfingstmontag'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-10-03'
+              - column:
+                  name: name
+                  value: 'Tag der Deutschen Einheit'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-12-25'
+              - column:
+                  name: name
+                  value: '1. Weihnachtstag'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true
+
+        - insert:
+            tableName: holiday
+            columns:
+              - column:
+                  name: date
+                  value: '2026-12-26'
+              - column:
+                  name: name
+                  value: '2. Weihnachtstag'
+              - column:
+                  name: beschreibung
+                  value: 'Gesetzlicher Feiertag'
+              - column:
+                  name: frei
+                  valueBoolean: true

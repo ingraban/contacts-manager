@@ -27,3 +27,11 @@ databaseChangeLog:
       file: db/changelog/changes/013-create-department-table.yaml
   - include:
       file: db/changelog/changes/014-create-employee-table.yaml
+  - include:
+      file: db/changelog/changes/015-add-test-departments-employees.yaml
+  - include:
+      file: db/changelog/changes/016-create-holiday-table.yaml
+  - include:
+      file: db/changelog/changes/017-add-test-holidays.yaml
+  - include:
+      file: db/changelog/changes/018-insert-personal-role.yaml

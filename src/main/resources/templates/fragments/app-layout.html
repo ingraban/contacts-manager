@@ -39,7 +39,7 @@
                 </details>
 
                 <!-- Konfiguration -->
-                <details th:attr="open=${activeMenu == 'hashtags' ? 'open' : null}">
+                <details th:attr="open=${activeMenu == 'hashtags' || activeMenu == 'holidays' ? 'open' : null}">
                     <summary>Konfiguration</summary>
                     <nav>
                         <a th:href="@{/hashtags}"
@@ -47,6 +47,12 @@
                            sec:authorize="hasRole('CONTACT')">
                             <i class="bi bi-hash"></i>
                             <span>Hashtags</span>
+                        </a>
+                        <a th:href="@{/holidays}"
+                           th:classappend="${activeMenu == 'holidays'} ? 'active' : ''"
+                           sec:authorize="hasRole('PERSONAL')">
+                            <i class="bi bi-calendar-event"></i>
+                            <span>Feiertage</span>
                         </a>
                     </nav>
                 </details>
