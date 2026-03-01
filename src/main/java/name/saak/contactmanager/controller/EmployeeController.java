@@ -1,6 +1,5 @@
 package name.saak.contactmanager.controller;
 
-import jakarta.validation.Valid;
 import name.saak.contactmanager.domain.Contact;
 import name.saak.contactmanager.domain.Department;
 import name.saak.contactmanager.domain.Employee;
@@ -9,16 +8,13 @@ import name.saak.contactmanager.service.DepartmentService;
 import name.saak.contactmanager.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.beans.PropertyEditorSupport;
 

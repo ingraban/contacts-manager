@@ -37,6 +37,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     /**
      * Findet einen Employee anhand der ID mit eager loading von Contact und Department.
      */
+    @SuppressWarnings("null")
     @EntityGraph(attributePaths = {"contact", "department"})
     Optional<Employee> findById(Long id);
 }
