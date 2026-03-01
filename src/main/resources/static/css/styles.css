@@ -934,6 +934,40 @@ tr:has(+ .hashtag-row) td {
     color: #333;
 }
 
+.admin-sidebar details {
+    margin-bottom: 0.5rem;
+}
+
+.admin-sidebar summary {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.admin-sidebar summary::-webkit-details-marker {
+    display: none;
+}
+
+.admin-sidebar summary::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 0.5rem;
+    transition: transform 0.2s;
+    font-size: 0.8rem;
+}
+
+.admin-sidebar details[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+.admin-sidebar summary:hover {
+    background: #f5f5f5;
+}
+
 .admin-sidebar nav {
     display: flex;
     flex-direction: column;
