@@ -11,11 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,9 +66,6 @@ class ExcelExportServiceTest {
 
         // When
         byte[] actualExcelData = excelExportService.exportContactsToExcel(contacts);
-
-        // Then - Verify against expected Excel file
-        String expectedFilePath = "src/test/resources/Export.xlsx";
 
         try (InputStream actualStream = new ByteArrayInputStream(actualExcelData);
              Workbook actualWorkbook = new XSSFWorkbook(actualStream)) {
