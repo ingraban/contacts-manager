@@ -1,6 +1,7 @@
 package name.saak.contactmanager.controller;
 
 import name.saak.contactmanager.domain.Holiday;
+import name.saak.contactmanager.service.HolidayImportService;
 import name.saak.contactmanager.service.HolidayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,11 @@ public class HolidayController {
     private static final Logger log = LoggerFactory.getLogger(HolidayController.class);
 
     private final HolidayService holidayService;
+    private final HolidayImportService holidayImportService;
 
-    public HolidayController(HolidayService holidayService) {
+    public HolidayController(HolidayService holidayService, HolidayImportService holidayImportService) {
         this.holidayService = holidayService;
+        this.holidayImportService = holidayImportService;
     }
 
     /**
@@ -171,6 +174,33 @@ public class HolidayController {
         } catch (Exception e) {
             log.error("Fehler beim Löschen des Feiertags", e);
             redirectAttributes.addFlashAttribute("errorMessage", "Fehler beim Löschen des Feiertags");
+        }
+        return "redirect:/holidays";
+    }
+
+    /**
+     * Importiert Feiertage für das aktuelle und nächste Jahr von der Feiertags-API.
+     */
+    @PostMapping("/import")
+    public String importHolidays(RedirectAttributes redirectAttributes) {
+        try {
+            HolidayImportService.ImportResult result = holidayImportService.importHolidays();
+
+            if (result.hasErrors()) {
+                redirectAttributes.addFlashAttribute("warningMessage",
+                    result.getSummary() + ". Es gab jedoch einige Fehler: " +
+                    String.join(", ", result.errors()));
+            } else {
+                redirectAttributes.addFlashAttribute("successMessage", result.getSummary());
+            }
+        } catch (HolidayImportService.ImportException e) {
+            log.error("Fehler beim Importieren der Feiertage", e);
+            redirectAttributes.addFlashAttribute("errorMessage",
+                "Fehler beim Importieren der Feiertage: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Unerwarteter Fehler beim Importieren der Feiertage", e);
+            redirectAttributes.addFlashAttribute("errorMessage",
+                "Unerwarteter Fehler beim Importieren der Feiertage");
         }
         return "redirect:/holidays";
     }

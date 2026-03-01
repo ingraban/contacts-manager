@@ -33,7 +33,8 @@
                     <label for="date">Datum <span class="required">*</span></label>
                     <input type="date"
                            id="date"
-                           th:field="*{date}"
+                           name="date"
+                           th:value="${holiday.date != null ? holiday.date.toString() : ''}"
                            class="form-control"
                            th:classappend="${#fields.hasErrors('date')} ? 'error-input' : ''"
                            required>

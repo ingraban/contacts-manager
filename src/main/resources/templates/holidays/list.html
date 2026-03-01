@@ -80,12 +80,15 @@
         <th:block th:fragment="content">
             <h1>Feiertagsverwaltung</h1>
 
-            <!-- Success/Error Messages -->
+            <!-- Success/Error/Warning Messages -->
             <div th:if="${successMessage}" class="alert alert-success">
                 <p th:text="${successMessage}"></p>
             </div>
             <div th:if="${errorMessage}" class="alert alert-error">
                 <p th:text="${errorMessage}"></p>
+            </div>
+            <div th:if="${warningMessage}" class="alert alert-warning">
+                <p th:text="${warningMessage}"></p>
             </div>
 
             <!-- Search Form -->
@@ -103,12 +106,20 @@
                 </form>
             </div>
 
-            <!-- Create Button -->
-            <div class="action-section">
+            <!-- Action Buttons -->
+            <div class="action-section" style="display: flex; gap: 10px;">
                 <a th:href="@{/holidays/new}" class="btn btn-primary" title="Neuer Feiertag">
                     <i class="bi bi-plus-lg"></i>
                     Neuer Feiertag
                 </a>
+                <form method="post" th:action="@{/holidays/import}" style="margin: 0;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn btn-secondary" title="Feiertage importieren"
+                            onclick="return confirm('Möchten Sie die Feiertage für das aktuelle und nächste Jahr importieren? Bereits vorhandene Feiertage werden übersprungen.');">
+                        <i class="bi bi-cloud-download"></i>
+                        Feiertage importieren
+                    </button>
+                </form>
             </div>
 
             <!-- Results Info -->

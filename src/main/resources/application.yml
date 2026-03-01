@@ -67,3 +67,6 @@ app:
     cron: "0 0 16 * * *"  # Täglich um 2:00 Uhr
     encryption:
       password: ${BACKUP_ENCRYPTION_PASSWORD:}
+
+  holidays:
+    region: ${HOLIDAYS_REGION:BY}  # Bundesland für Feiertags-Import (BY = Bayern)
