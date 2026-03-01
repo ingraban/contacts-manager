@@ -1,6 +1,5 @@
 package name.saak.contactmanager.config;
 
-import name.saak.contactmanager.domain.User;
 import name.saak.contactmanager.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

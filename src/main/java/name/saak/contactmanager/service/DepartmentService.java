@@ -3,7 +3,6 @@ package name.saak.contactmanager.service;
 import name.saak.contactmanager.domain.Department;
 import name.saak.contactmanager.repository.DepartmentRepository;
 import name.saak.contactmanager.repository.HashtagRepository;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
