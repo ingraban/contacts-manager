@@ -233,4 +233,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Delete Department Confirmation
+    const deleteDepartmentForms = document.querySelectorAll('.delete-department-form');
+    deleteDepartmentForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Möchten Sie diese Abteilung wirklich löschen?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Delete Employee Confirmation
+    const deleteEmployeeForms = document.querySelectorAll('.delete-employee-form');
+    deleteEmployeeForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Möchten Sie diesen Mitarbeiter wirklich löschen? Der zugehörige Kontakt bleibt erhalten.')) {
+                e.preventDefault();
+            }
+        });
+    });
 });

@@ -23,3 +23,7 @@ databaseChangeLog:
       file: db/changelog/changes/011-insert-initial-users.yaml
   - include:
       file: db/changelog/changes/012-update-passwords-bcrypt.yaml
+  - include:
+      file: db/changelog/changes/013-create-department-table.yaml
+  - include:
+      file: db/changelog/changes/014-create-employee-table.yaml

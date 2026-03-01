@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 015-add-test-departments-employees
+      author: saak
+      changes:
+        # Insert test departments
+        - insert:
+            tableName: department
+            columns:
+              - column:
+                  name: name
+                  value: IT
+              - column:
+                  name: beschreibung
+                  value: Informationstechnologie-Abteilung
+
+        - insert:
+            tableName: department
+            columns:
+              - column:
+                  name: name
+                  value: Verwaltung
+              - column:
+                  name: beschreibung
+                  value: Verwaltungsabteilung
+
+        - insert:
+            tableName: department
+            columns:
+              - column:
+                  name: name
+                  value: Vertrieb
+              - column:
+                  name: beschreibung
+                  value: Vertriebsabteilung

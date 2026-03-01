@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitarbeiter - Sommerhausen Office Suite</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <th:block th:replace="~{fragments/app-layout :: app-layout('employees', ~{::content})}">
+        <th:block th:fragment="content">
+            <h1>Mitarbeiterverwaltung</h1>
+
+            <!-- Success/Error Messages -->
+            <div th:if="${successMessage}" class="alert alert-success">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <!-- Create Button -->
+            <div class="action-section">
+                <a th:href="@{/employees/new}" class="btn btn-primary" title="Neuer Mitarbeiter">
+                    <i class="bi bi-plus-lg"></i>
+                    Neuer Mitarbeiter
+                </a>
+            </div>
+
+            <!-- Employee Table -->
+            <div th:if="${employees.empty}" class="empty-state">
+                <p>Keine Mitarbeiter gefunden.</p>
+            </div>
+
+            <table th:unless="${employees.empty}" class="contact-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Abteilung</th>
+                        <th>Wochenstunden</th>
+                        <th>Arbeitstage</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="employee : ${employees}">
+                        <td>
+                            <div>
+                                <strong>
+                                    <span th:text="${employee.contact.vorname}"></span>
+                                    <span th:text="${employee.contact.nachname}"></span>
+                                </strong>
+                            </div>
+                            <div th:if="${employee.contact.firma}" class="contact-firma"
+                                 th:text="${employee.contact.firma}"></div>
+                        </td>
+                        <td>
+                            <span th:text="${employee.department.name}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${employee.weeklyHours}"></span> h
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.25rem; flex-wrap: wrap;">
+                                <span th:if="${employee.worksMonday}" class="badge badge-success" title="Montag">Mo</span>
+                                <span th:if="${employee.worksTuesday}" class="badge badge-success" title="Dienstag">Di</span>
+                                <span th:if="${employee.worksWednesday}" class="badge badge-success" title="Mittwoch">Mi</span>
+                                <span th:if="${employee.worksThursday}" class="badge badge-success" title="Donnerstag">Do</span>
+                                <span th:if="${employee.worksFriday}" class="badge badge-success" title="Freitag">Fr</span>
+                                <span th:if="${employee.worksSaturday}" class="badge badge-success" title="Samstag">Sa</span>
+                                <span th:if="${employee.worksSunday}" class="badge badge-success" title="Sonntag">So</span>
+                            </div>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/employees/{id}/edit(id=${employee.id})}"
+                               class="btn btn-small btn-secondary"
+                               title="Bearbeiten">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <form method="post"
+                                  th:action="@{/employees/{id}/delete(id=${employee.id})}"
+                                  class="delete-employee-form"
+                                  style="display: inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button type="submit" class="btn btn-small btn-danger" title="Löschen">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <script th:src="@{/js/app.js}"></script>
+        </th:block>
+    </th:block>
+</body>
+</html>

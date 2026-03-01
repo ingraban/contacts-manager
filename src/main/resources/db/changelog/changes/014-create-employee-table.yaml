@@ -1,0 +1,154 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-create-employee-table
+      author: saak
+      changes:
+        - createTable:
+            tableName: employee
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: contact_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: department_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weekly_hours
+                  type: int
+                  constraints:
+                    nullable: false
+              # 7 working day booleans
+              - column:
+                  name: works_monday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: works_tuesday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: works_wednesday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: works_thursday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: works_friday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: works_saturday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: works_sunday
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              # 7 daily work hours (TIME)
+              - column:
+                  name: monday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: tuesday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: wednesday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: thursday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: friday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: saturday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: sunday_hours
+                  type: time
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        # Foreign Keys
+        - addForeignKeyConstraint:
+            baseTableName: employee
+            baseColumnNames: contact_id
+            referencedTableName: contact
+            referencedColumnNames: id
+            constraintName: fk_employee_contact
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: employee
+            baseColumnNames: department_id
+            referencedTableName: department
+            referencedColumnNames: id
+            constraintName: fk_employee_department
+            onDelete: RESTRICT
+
+        # Indexes
+        - createIndex:
+            tableName: employee
+            indexName: idx_employee_contact
+            columns:
+              - column:
+                  name: contact_id
+
+        - createIndex:
+            tableName: employee
+            indexName: idx_employee_department
+            columns:
+              - column:
+                  name: department_id
