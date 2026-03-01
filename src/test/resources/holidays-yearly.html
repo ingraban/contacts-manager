@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktuelle Uhrzeit</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+    <style>
+        .table-head {
+            background-color: #bcbcbc;
+            font-weight: bold;
+        }
+
+        td {
+            background-color: #fca;
+            text-align: center;
+        }
+
+        td:hover {
+            background-color: #f64;
+            cursor:none;
+        }
+
+        /* Schließtag */
+        .closed {
+            background-color: #e694ffdf;
+        }
+        td:hover.closed {
+            background-color: #a452bcdf;
+        }
+
+        /* zu viele Fehltage in Übersicht (sowohl Urlaub, als auch Regeneration, Krank, ... ) */
+        .critcal {
+            background-color: #f66;
+        }
+        td:hover.critcal {
+            background-color: #f00;
+        }
+
+        /* Urlaub */
+        .free {
+            background-color: #8f8;
+        }
+        td:hover.free {
+            background-color: #8d8;
+        }
+
+        /* handelbare Fehltage in Übersicht (sowohl Urlaub, als auch Regeneration, Krank, ... ) */
+        .missed {
+            background-color: #ffffb0c9;
+        }
+        td:hover.missed {
+            background-color: #bbbb34c9;
+        }
+
+        /* Wochenende */
+        .saturday {
+            background-color: #aaf;
+        }
+        td:hover.saturday {
+            background-color: #44f;
+        }
+        
+        .sunday,
+        .holiday {
+            background-color: #88f;
+        }
+        td:hover.sunday,
+        td:hover.holiday {
+            background-color: #22f;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th {
+            min-width: 18px;
+        }
+
+        /**  Details und Summary **/
+        details {
+            /*
+            border: 1px solid #ccc;
+            padding: 10px;
+            */
+            border-radius: 4px;
+            margin-bottom: 3px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 2px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        summary:hover {
+            background-color: #e0e0e0;
+        }
+
+        details[open] summary {
+            margin-bottom: 1px;
+        }
+
+        /* Pfeil-Icon anpassen */
+        summary::marker {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Kleinkindhaus</h2>
+    <details open>
+        <summary>Übersicht</summary>
+        <table>
+            <thead>
+                <tr class="table-head">
+                    <th>Monat</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>13</th>
+                    <th>14</th>
+                    <th>15</th>
+                    <th>16</th>
+                    <th>17</th>
+                    <th>18</th>
+                    <th>19</th>
+                    <th>20</th>
+                    <th>21</th>
+                    <th>22</th>
+                    <th>23</th>
+                    <th>24</th>
+                    <th>25</th>
+                    <th>26</th>
+                    <th>27</th>
+                    <th>28</th>
+                    <th>29</th>
+                    <th>30</th>
+                    <th>31</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="table-head">Jan.</td>
+                    <td class="holiday"></td>
+                    <td class="closed"></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td class="closed"></td>
+                    <td class="holiday"></td>
+                    <td class="critcal">3</td>
+                    <td class="missed">1</td>
+                    <td class="missed">1</td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Feb.</td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Mrz.</td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Apr.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Mai</td>
+                    <td class="holiday"></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Jun.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Jul.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Aug.</td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Sep.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Okt.</td>
+                    <td></td>
+                    <td></td>
+                    <td class="holiday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Nov.</td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="table-head">Dez.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="holiday"></td>
+                    <td class="holiday"></td>
+                    <td class="saturday"></td>
+                    <td class="sunday"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="holiday"></td>
+                </tr>
+            </tbody>
+        </table>
+        <details>
+            <summary>Käfergruppe</summary>
+            <table>
+                <thead>
+                    <tr class="table-head">
+                        <th>Monat</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                        <th>13</th>
+                        <th>14</th>
+                        <th>15</th>
+                        <th>16</th>
+                        <th>17</th>
+                        <th>18</th>
+                        <th>19</th>
+                        <th>20</th>
+                        <th>21</th>
+                        <th>22</th>
+                        <th>23</th>
+                        <th>24</th>
+                        <th>25</th>
+                        <th>26</th>
+                        <th>27</th>
+                        <th>28</th>
+                        <th>29</th>
+                        <th>30</th>
+                        <th>31</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table-head">Jan.</td>
+                        <td class="holiday"></td>
+                        <td class="closed"></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td class="closed"></td>
+                        <td class="holiday"></td>
+                        <td class="critcal">3</td>
+                        <td class="missed">1</td>
+                        <td class="missed">1</td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Feb.</td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Mrz.</td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Apr.</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Mai</td>
+                        <td class="holiday"></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Jun.</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Jul.</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Aug.</td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Sep.</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Okt.</td>
+                        <td></td>
+                        <td></td>
+                        <td class="holiday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Nov.</td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="table-head">Dez.</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="holiday"></td>
+                        <td class="holiday"></td>
+                        <td class="saturday"></td>
+                        <td class="sunday"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="holiday"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <details>
+                <summary>Sabine Nussbaum</summary>
+                <table>
+                    <thead>
+                        <tr class="table-head">
+                            <th>Monat</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                            <th>13</th>
+                            <th>14</th>
+                            <th>15</th>
+                            <th>16</th>
+                            <th>17</th>
+                            <th>18</th>
+                            <th>19</th>
+                            <th>20</th>
+                            <th>21</th>
+                            <th>22</th>
+                            <th>23</th>
+                            <th>24</th>
+                            <th>25</th>
+                            <th>26</th>
+                            <th>27</th>
+                            <th>28</th>
+                            <th>29</th>
+                            <th>30</th>
+                            <th>31</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="table-head">Jan.</td>
+                            <td class="holiday"></td>
+                            <td class="closed"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td class="closed"></td>
+                            <td class="holiday"></td>
+                            <td class="free"></td>
+                            <td class="free"></td>
+                            <td class="free"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Feb.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Mrz.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Apr.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Mai</td>
+                            <td class="holiday"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Jun.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Jul.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Aug.</td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Sep.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Okt.</td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Nov.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Dez.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                            <td class="holiday"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </details>
+
+            <details>
+                <summary>Barbara Velten</summary>
+                <table>
+                    <thead>
+                        <tr class="table-head">
+                            <th>Monat</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                            <th>13</th>
+                            <th>14</th>
+                            <th>15</th>
+                            <th>16</th>
+                            <th>17</th>
+                            <th>18</th>
+                            <th>19</th>
+                            <th>20</th>
+                            <th>21</th>
+                            <th>22</th>
+                            <th>23</th>
+                            <th>24</th>
+                            <th>25</th>
+                            <th>26</th>
+                            <th>27</th>
+                            <th>28</th>
+                            <th>29</th>
+                            <th>30</th>
+                            <th>31</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="table-head">Jan.</td>
+                            <td class="holiday"></td>
+                            <td class="closed"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td class="closed"></td>
+                            <td title="Heilig 3 König" class="holiday"></td>
+                            <td title="Urlaub am 07.01." class="free"></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Feb.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Mrz.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Apr.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Mai</td>
+                            <td class="holiday"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Jun.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Jul.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Aug.</td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Sep.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Okt.</td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Nov.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Dez.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                            <td class="holiday"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </details>
+
+            <details>
+                <summary>Springer</summary>
+                <table>
+                    <thead>
+                        <tr class="table-head">
+                            <th>Monat</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                            <th>13</th>
+                            <th>14</th>
+                            <th>15</th>
+                            <th>16</th>
+                            <th>17</th>
+                            <th>18</th>
+                            <th>19</th>
+                            <th>20</th>
+                            <th>21</th>
+                            <th>22</th>
+                            <th>23</th>
+                            <th>24</th>
+                            <th>25</th>
+                            <th>26</th>
+                            <th>27</th>
+                            <th>28</th>
+                            <th>29</th>
+                            <th>30</th>
+                            <th>31</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="table-head">Jan.</td>
+                            <td class="holiday"></td>
+                            <td class="closed"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td class="closed"></td>
+                            <td class="holiday"></td>
+                            <td class="free">R</td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Feb.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Mrz.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Apr.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Mai</td>
+                            <td class="holiday"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Jun.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Jul.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Aug.</td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Sep.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Okt.</td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Nov.</td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="table-head">Dez.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                            <td class="holiday"></td>
+                            <td class="saturday"></td>
+                            <td class="sunday"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="holiday"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </details>
+        </details>
+    </details>
+</body>
+
+</html>
