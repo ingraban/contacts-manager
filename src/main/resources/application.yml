@@ -63,5 +63,7 @@ spring:
 app:
   backup:
     enabled: true
-    directory: ./backup
-    cron: "0 0 2 * * *"  # Täglich um 2:00 Uhr
+    directory: ${APP_BACKUP_DIRECTORY:./backup}
+    cron: "0 0 16 * * *"  # Täglich um 2:00 Uhr
+    encryption:
+      password: ${BACKUP_ENCRYPTION_PASSWORD:}

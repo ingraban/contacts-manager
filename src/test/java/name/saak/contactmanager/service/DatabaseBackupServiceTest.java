@@ -30,8 +30,8 @@ class DatabaseBackupServiceTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        // Test-Service mit eigenem Backup-Verzeichnis erstellen
-        backupService = new DatabaseBackupService(jdbcTemplate, testBackupDir);
+        // Test-Service mit eigenem Backup-Verzeichnis erstellen (ohne Verschlüsselung für Tests)
+        backupService = new DatabaseBackupService(jdbcTemplate, testBackupDir, "");
 
         // Test-Verzeichnis erstellen
         Path backupPath = Paths.get(testBackupDir);
