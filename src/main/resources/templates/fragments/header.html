@@ -1,14 +1,15 @@
 <!-- src/main/resources/templates/fragments/header.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
 </head>
+
 <body>
   <!-- Header Fragment -->
   <header class="header" th:fragment="header(activePage)">
     <div class="header-content">
-      <h1><a href="/contacts">Sommerhausen Office Suite</a></h1>
+      <h1><a href="/">Sommerhausen Office Suite</a></h1>
       <nav class="nav">
         <!-- Benutzer-Dropdown-Menü -->
         <div class="user-menu" th:if="${currentUserDisplayName}">
@@ -31,5 +32,5 @@
     <script th:src="@{/js/user-menu.js}"></script>
   </header>
 </body>
-</html>
 
+</html>
