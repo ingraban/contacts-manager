@@ -3,6 +3,7 @@ package name.saak.contactmanager.controller;
 import jakarta.validation.Valid;
 import name.saak.contactmanager.domain.Department;
 import name.saak.contactmanager.service.DepartmentService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/departments")
+@PreAuthorize("hasRole('PERSONAL')")
 public class DepartmentController {
 
     private final DepartmentService departmentService;

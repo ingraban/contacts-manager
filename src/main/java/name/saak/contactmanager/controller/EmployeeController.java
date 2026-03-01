@@ -8,6 +8,7 @@ import name.saak.contactmanager.service.DepartmentService;
 import name.saak.contactmanager.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,6 +21,7 @@ import java.beans.PropertyEditorSupport;
 
 @Controller
 @RequestMapping("/employees")
+@PreAuthorize("hasRole('PERSONAL')")
 public class EmployeeController {
 
     private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);

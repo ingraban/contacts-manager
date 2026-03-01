@@ -25,13 +25,13 @@
                         </a>
                         <a th:href="@{/employees}"
                            th:classappend="${activeMenu == 'employees'} ? 'active' : ''"
-                           sec:authorize="hasRole('CONTACT')">
+                           sec:authorize="hasRole('PERSONAL')">
                             <i class="bi bi-person-badge"></i>
                             <span>Mitarbeiter</span>
                         </a>
                         <a th:href="@{/departments}"
                            th:classappend="${activeMenu == 'departments'} ? 'active' : ''"
-                           sec:authorize="hasRole('CONTACT')">
+                           sec:authorize="hasRole('PERSONAL')">
                             <i class="bi bi-building"></i>
                             <span>Abteilungen</span>
                         </a>
