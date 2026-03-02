@@ -19,7 +19,7 @@
                     <nav>
                         <a th:href="@{/contacts}"
                            th:classappend="${activeMenu == 'contacts'} ? 'active' : ''"
-                           sec:authorize="hasRole('CONTACT')">
+                           sec:authorize="hasAnyRole('CONTACT', 'PERSONAL')">
                             <i class="bi bi-person-vcard"></i>
                             <span>Kontakte</span>
                         </a>
@@ -44,7 +44,7 @@
                     <nav>
                         <a th:href="@{/hashtags}"
                            th:classappend="${activeMenu == 'hashtags'} ? 'active' : ''"
-                           sec:authorize="hasRole('CONTACT')">
+                           sec:authorize="hasAnyRole('CONTACT')">
                             <i class="bi bi-hash"></i>
                             <span>Hashtags</span>
                         </a>

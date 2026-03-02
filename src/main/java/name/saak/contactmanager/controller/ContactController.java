@@ -38,7 +38,7 @@ public class ContactController {
     /**
      * Zeigt die Kontaktliste mit optionaler Suche und Sortierung.
      */
-    @PreAuthorize("hasAnyRole('CONTACT')")
+    @PreAuthorize("hasAnyRole('CONTACT', 'PERSONAL')")
     @GetMapping
     public String listContacts(
             @RequestParam(name = "search", required = false) String searchTerm,

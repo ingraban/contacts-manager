@@ -49,8 +49,12 @@
                         <td>
                             <div>
                                 <strong>
-                                    <span th:text="${employee.contact.vorname}"></span>
-                                    <span th:text="${employee.contact.nachname}"></span>
+                                    <a th:href="@{/contacts/{id}/edit(id=${employee.contact.id})}"
+                                       style="text-decoration: none; color: inherit;"
+                                       title="Kontakt bearbeiten">
+                                        <span th:text="${employee.contact.vorname}"></span>
+                                        <span th:text="${employee.contact.nachname}"></span>
+                                    </a>
                                 </strong>
                             </div>
                             <div th:if="${employee.contact.firma}" class="contact-firma"
